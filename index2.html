@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Scroll Date Picker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      height: 100vh;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .picker-container {
+      display: flex;
+      gap: 1rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 400px;
+      justify-content: center;
+      overflow-x: auto;
+    }
+
+    .picker-column {
+      flex: 0 0 auto;
+      width: 80px;
+      height: 160px;
+      overflow-y: auto;
+      scroll-snap-type: y mandatory;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      position: relative;
+      scrollbar-width: auto;
+      scroll-behavior: smooth;
+    }
+
+    .picker-column::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .picker-column::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 4px;
+    }
+
+    .picker-item {
+      scroll-snap-align: center;
+      text-align: center;
+      padding: 0.75rem 0;
+      font-size: 1rem;
+      user-select: none;
+      transition: background 0.2s, font-weight 0.2s;
+      cursor: pointer;
+    }
+
+    .picker-item.selected {
+      background-color: #d0eaff;
+      font-weight: bold;
+    }
+
+    .picker-column::before,
+    .picker-column::after {
+      content: '';
+      position: sticky;
+      height: 30px;
+      background: linear-gradient(to bottom, white, transparent);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .picker-column::after {
+      top: auto;
+      bottom: 0;
+      background: linear-gradient(to top, white, transparent);
+    }
+
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 8px;
+      border: none;
+      background: #007bff;
+      color: white;
+    }
+
+    @media (max-width: 600px) {
+      .picker-container {
+        width: 100%;
+        gap: 0.5rem;
+      }
+
+      .picker-column {
+        width: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="picker-container">
+    <div class="picker-column" id="day-column">
+      <script>
+        for (let i = 1; i <= 31; i++) {
+          document.write(`<div class="picker-item">${i}</div>`);
+        }
+      </script>
+    </div>
+
+    <div class="picker-column" id="month-column">
+      <div class="picker-item">Jan</div>
+      <div class="picker-item">Fev</div>
+      <div class="picker-item">Mar</div>
+      <div class="picker-item">Abr</div>
+      <div class="picker-item">Mai</div>
+      <div class="picker-item">Jun</div>
+      <div class="picker-item">Jul</div>
+      <div class="picker-item">Ago</div>
+      <div class="picker-item">Set</div>
+      <div class="picker-item">Out</div>
+      <div class="picker-item">Nov</div>
+      <div class="picker-item">Dez</div>
+    </div>
+
+    <div class="picker-column" id="year-column">
+      <script>
+        for (let y = 1950; y <= 2050; y++) {
+          document.write(`<div class="picker-item">${y}</div>`);
+        }
+      </script>
+    </div>
+  </div>
+
+  <button onclick="getSelectedDate()">Obter Data</button>
+
+  <script>
+    const monthMap = {
+      Jan: '01', Fev: '02', Mar: '03', Abr: '04',
+      Mai: '05', Jun: '06', Jul: '07', Ago: '08',
+      Set: '09', Out: '10', Nov: '11', Dez: '12'
+    };
+
+    function getSelectedItem(container) {
+      const items = container.querySelectorAll('.picker-item');
+      const containerRect = container.getBoundingClientRect();
+      let closestItem = null;
+      let closestDistance = Infinity;
+
+      items.forEach(item => {
+        const itemRect = item.getBoundingClientRect();
+        const itemCenter = itemRect.top + itemRect.height / 2;
+        const containerCenter = containerRect.top + containerRect.height / 2;
+        const distance = Math.abs(containerCenter - itemCenter);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestItem = item;
+        }
+      });
+
+      // Marca visualmente
+      items.forEach(item => item.classList.remove('selected'));
+      if (closestItem) closestItem.classList.add('selected');
+
+      return closestItem ? closestItem.textContent : null;
+    }
+
+    function scrollToItem(item, container) {
+      const containerTop = container.getBoundingClientRect().top;
+      const itemTop = item.getBoundingClientRect().top;
+      const offset = itemTop - containerTop - (container.offsetHeight / 2) + (item.offsetHeight / 2);
+      container.scrollBy({ top: offset, behavior: 'smooth' });
+    }
+
+    function getSelectedDate() {
+      const day = getSelectedItem(document.getElementById('day-column'));
+      const monthName = getSelectedItem(document.getElementById('month-column'));
+      const year = getSelectedItem(document.getElementById('year-column'));
+
+      if (day && monthName && year) {
+        const dayStr = day.padStart(2, '0');
+        const monthStr = monthMap[monthName] || '01';
+        const date = `${dayStr}/${monthStr}/${year}`;
+        alert('Data selecionada: ' + date);
+      } else {
+        alert('Por favor, selecione todos os campos.');
+      }
+    }
+
+    // Inicializa seletores
+    const columns = document.querySelectorAll('.picker-column');
+    columns.forEach(column => {
+      const items = column.querySelectorAll('.picker-item');
+
+      // Atualiza item selecionado ao rolar
+      column.addEventListener('scroll', () => {
+        clearTimeout(column._timeout);
+        column._timeout = setTimeout(() => {
+          getSelectedItem(column);
+        }, 100);
+      });
+
+      // Permite clicar para selecionar
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          scrollToItem(item, column);
+        });
+      });
+    });
+
+    // Marcar seleção inicial ao carregar
+    window.onload = () => {
+      columns.forEach(getSelectedItem);
+    };
+  </script>
+</body>
+</html>
