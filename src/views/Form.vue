@@ -30,13 +30,19 @@
             </label>
 
             <div class="input-group">
-              <input id="cpf" class="form-control" type="text" v-model="registros.item.pessoa_cpf"
-                v-mask="'###.###.###-##'" @keyup.enter="getCpfDetails(true)" />
+              <input id="cpf" class="form-control" :disabled="registros.cpf_validado" type="text"
+                v-model="registros.item.pessoa_cpf" v-mask="'###.###.###-##'" @keyup.enter="getCpfDetails(true)" />
 
-              <button class="btn btn-outline-primary" type="button" @click="getCpfDetails(true)">
+              <button :disabled="registros.cpf_validado" class="btn btn-outline-primary" type="button" @click="getCpfDetails(true)">
                 Buscar CPF
               </button>
             </div>
+
+            <transition name="fade">
+              <div v-if="registros.cpf_nao_encontrado">
+                <p>CPF não encontrado, verifique se está correto!</p>
+              </div>
+            </transition>
 
             <div v-if="erros.pessoa_cpf" class="text-danger mt-1">
               {{ erros.pessoa_cpf }}
@@ -44,9 +50,10 @@
           </div>
 
           <div class="mb-3">
-            <label class="form-label text-dark text-start" for="nome">Nome Completo: <label style="color:red">*</label>
+            <label class="form-label text-dark text-start" for="nome">Nome Completo:
+              <label style="color:red">*</label>
             </label>
-            <input class="form-control" type="text" v-model="registros.item.pessoa_nome" id="nome" />
+            <input class="form-control" :disabled="registros.cpf_validado" type="text" v-model="registros.item.pessoa_nome" id="nome" />
             <div v-if="erros.pessoa_nome" class="text-danger mt-1">
               {{ erros.pessoa_nome }}
             </div>
@@ -54,13 +61,13 @@
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="apelido">Apelido:</label>
-            <input class="form-control" type="text" v-model="registros.item.pessoa_apelido" id="apelido" />
+            <input class="form-control" :disabled="registros.cpf_validado" type="text" v-model="registros.item.pessoa_apelido" id="apelido" />
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark" for="pessoa_nascimento">Data de Nascimento:<label
                 style="color:red">*</label></label>
-            <input class="form-control" type="date" v-model="registros.item.pessoa_nascimento" id="pessoa_nascimento"
+            <input class="form-control" type="date" :disabled="registros.cpf_validado" v-model="registros.item.pessoa_nascimento" id="pessoa_nascimento"
               true-value="S" false-value="N" />
 
             <div v-if="erros.pessoa_nascimento" class="text-danger mt-1">
@@ -142,9 +149,9 @@
 
               <div class="input-group">
                 <input id="conjugeCpf" class="form-control" type="text" v-model="registros.item.conjuge_cpf"
-                  v-mask="'###.###.###-##'" @keyup.enter="getCpfDetails(false, true)" />
+                  v-mask="'###.###.###-##'" @keyup.enter="getCpfDetails(false, true)" :disabled="registros.cpf_validado"/>
 
-                <button class="btn btn-outline-primary" type="button" @click="getCpfDetails(false, true)">
+                <button :disabled="registros.cpf_validado" class="btn btn-outline-primary" type="button" @click="getCpfDetails(false, true)">
                   Buscar CPF
                 </button>
               </div>
@@ -157,7 +164,7 @@
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="nomeConjuge">Nome Completo:<label
                   style="color:red">*</label></label>
-              <input class="form-control" type="text" v-model="registros.item.conjuge_nome" id="nomeConjuge" />
+              <input class="form-control" type="text" v-model="registros.item.conjuge_nome" :disabled="registros.cpf_validado" id="nomeConjuge" />
               <div v-if="erros.conjuge_nome" class="text-danger mt-1">
                 {{ erros.conjuge_nome }}
               </div>
@@ -165,13 +172,13 @@
 
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="apelidoConjuge">Apelido:</label>
-              <input class="form-control" type="text" v-model="registros.item.conjuge_apelido" id="apelidoConjuge" />
+              <input class="form-control" type="text" v-model="registros.item.conjuge_apelido" :disabled="registros.cpf_validado" id="apelidoConjuge" />
             </div>
 
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="conjugeNascimento">Data de
                 Nascimento:<label style="color:red">*</label></label>
-              <input class="form-control" type="date" v-model="registros.item.conjuge_nascimento"
+              <input class="form-control" type="date" :disabled="registros.cpf_validado" v-model="registros.item.conjuge_nascimento"
                 id="conjugeNascimento" />
               <div v-if="erros.conjuge_nascimento" class="text-danger mt-1">
                 {{ erros.conjuge_nascimento }}
@@ -309,7 +316,7 @@
       <form>
         <label class="form-label text-dark text-start" for="nome">Selecione as informações de religião {{
           registros.item.pessoa_nome
-        }}:</label>
+          }}:</label>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="religiao"> Religião: </label>
@@ -383,7 +390,7 @@
         <div v-if="this.comConjuge.includes(registros.item.pessoa_estado_civil)">
           <label class="form-label text-dark text-start" for="nome">Selecione as informações de religião (CÔNJUGE) {{
             registros.item.conjuge_nome
-          }}:</label>
+            }}:</label>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="conjugeReligiao"> Religião: </label>
@@ -489,7 +496,7 @@
     <div v-if="activeTab === 'habilidades'">
       <label class="form-label text-dark text-start" for="nome">Selecione as habilidades que você se enquadra {{
         registros.item.pessoa_nome
-      }}: </label>
+        }}: </label>
       <form>
         <div class="form-check mb-3">
           <label class="form-check-label text-dark text-start" for="habilidade_cantar">Cantar</label>
@@ -851,7 +858,7 @@
           Selecione as equipes que você(s) se enquadra(m) {{ registros.item.pessoa_nome }}
           <span v-if="this.comConjuge.includes(registros.item.pessoa_estado_civil)"> e {{
             registros.item.conjuge_nome
-          }}</span>:
+            }}</span>:
         </label>
 
         <div class="form-check mb-3">
@@ -1007,6 +1014,8 @@ export default {
         { id: 'etapa3', label: 'Etapa 3', libera: false },
       ],
       registros: {
+        cpf_nao_encontrado: false,
+        cpf_validado: false,
         item: {
           pessoa_sacramento_batismo: 'N',
           pessoa_sacramento_eucaristia: 'N',
@@ -1170,7 +1179,14 @@ export default {
       } else {
         this.pessoaNascimentoFormatada = '';
       }
-    }
+    },
+    'registros.cpf_nao_encontrado': function (val) {
+      if (val) {
+        setTimeout(() => {
+          this.registros.cpf_nao_encontrado = false
+        }, 10000);
+      }
+    },
   },
   mounted() {
     this.intervalId = setInterval(() => {
@@ -1695,10 +1711,19 @@ export default {
           return response.json();
         })
         .then(data => {
-          if (Object.keys(data).length > 0) {
+          if (Object.keys(data)?.length > 0) {
             let dados = data[0];
+
             this.registros.item = dados;
             //console.log(dados);
+            if (dados.pessoa_cpf?.length >= 11) {
+              this.registros.cpf_validado = true;
+            }
+
+            if (dados.conjuge_cpf?.length >= 11) {
+              this.registros.cpf_validado = true;
+            }
+
             if (dados.pessoa_etapa_1 === 'S' || dados.pessoa_etapa_2 === 'S' || dados.pessoa_etapa_3 === 'S') {
               setTimeout(() => {
                 this.registros.item.fezECC = 'S';
@@ -1899,7 +1924,7 @@ export default {
       if (precisaConverter.includes(file.type)) {
         file = await this.converterParaJpeg(file);
         console.log('file convertido', file);
-        
+
         metaDados = this.metaDadosImage(file);
       }
 
@@ -2281,6 +2306,7 @@ export default {
 
         const data = await res.json();
         this.registros.cpf_nao_encontrado = false;
+        this.registros.cpf_validado = true;
         if (item && !conjuge) {
           this.registros.item.pessoa_nome = data.nome;
           this.registros.item.pessoa_apelido = data.nome.split(' ').shift();
@@ -2311,6 +2337,16 @@ export default {
 </script>
 
 <style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
 body {
   background-color: #f8f9fa;
 }
