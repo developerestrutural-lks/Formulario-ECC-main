@@ -1940,7 +1940,7 @@ export default {
         this.registros.item.pessoa_foto_casal = metaDados.nameUUID;
         document.getElementById('pessoa_foto_casal').src = URL.createObjectURL(metaDados.file);
       }
-      // this.uploadImagem(metaDados);
+      this.uploadImagem(metaDados);
     },
     metaDadosImage(event) {
       let document = event;

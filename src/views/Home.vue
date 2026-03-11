@@ -238,7 +238,6 @@ export default {
                    AND pessoa_origem_tipo_dom = 5738
                    AND ${where}`
 
-          console.log(query);
       const data = { query: query }
       const requestOptions = {
         method: 'POST',
