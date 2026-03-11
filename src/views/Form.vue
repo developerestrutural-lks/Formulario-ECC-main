@@ -1293,7 +1293,7 @@ export default {
                   v_pessoas.ativo := 'S';
                   v_pessoas.nome := UPPER(TRIM('${this.registros.item?.pessoa_nome ?? ''}'));
                   v_pessoas.conjuge_nome := UPPER(TRIM('${this.registros.item?.conjuge_nome ?? ''}'));
-                  v_pessoas.apelido := UPPER(TRIM('${this.registros.item?.pessoa_apelido ?? ''}'));
+                  v_pessoas.apelido := UPPER(TRIM('${this.registros.item?.pessoa_apelido ?? (this.registros.item?.pessoa_nome ?? '').split(' ')[0]}'));
                   v_pessoas.conjuge_apelido := UPPER(TRIM('${this.registros.item?.conjuge_apelido ?? ''}'));
                   v_pessoas.data_nascimento := to_date('${this.registros.item?.pessoa_nascimento || '1111-11-11'}', 'yyyy-mm-dd');
                   v_pessoas.data_nascimento_conjuge := to_date('${this.registros.item.conjuge_nascimento || '1111-11-11'}', 'yyyy-mm-dd');
