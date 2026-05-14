@@ -12,7 +12,11 @@ async function carregar() {
     try {
         const queryPayload = { query: query }
         const response = await axios.post(
+<<<<<<< HEAD
             'https://app.seg.inf.br/sge/api/tela/listByOne',
+=======
+            'https://app.seg.inf.br/novo/api/tela/listByOne',
+>>>>>>> 9286d87521e6c5edf01f1c21e41b21493537c98b
             queryPayload,
             {
                 headers: {
