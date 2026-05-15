@@ -5,7 +5,7 @@
       <h4>ENCONTRO DE CASAIS COM CRISTO</h4>
       <!-- Passagem parâmetro listar dados e salvar -->
       <button class="btn btn-primary" @click="validarPessoaImportacao(); salvar(true, true); finalizarFormulario()"
-        @keypress.enter="listarDados(false); salvar(true); finalizarFormulario()">Finalizar Questionário
+              @keypress.enter="listarDados(false); salvar(true); finalizarFormulario()">Finalizar Questionário
       </button>
     </div>
 
@@ -28,8 +28,8 @@
       </small>
     </div>
     <div class="progress mb-3" style="height: 8px;" role="progressbar"
-      :aria-valuenow="percentualProgresso" aria-valuemin="0" aria-valuemax="100"
-      :aria-label="`Progresso do formulário: ${percentualProgresso}%`">
+         :aria-valuenow="percentualProgresso" aria-valuemin="0" aria-valuemax="100"
+         :aria-label="`Progresso do formulário: ${percentualProgresso}%`">
       <div class="progress-bar bg-success" :style="{ width: percentualProgresso + '%' }"></div>
     </div>
 
@@ -37,8 +37,8 @@
     <ul class="nav nav-tabs" role="tablist">
       <li class="nav-item" v-for="tab in tabs" :key="tab.id" role="presentation">
         <button type="button" class="nav-link" :class="{ active: activeTab === tab.id }"
-          style="font-weight: bold; font-size: 14pt;" @click="tentarMudarAba(tab.id)" v-if="tab.libera"
-          role="tab" :aria-selected="activeTab === tab.id" :aria-controls="`painel-${tab.id}`">
+                style="font-weight: bold; font-size: 14pt;" @click="tentarMudarAba(tab.id)" v-if="tab.libera"
+                role="tab" :aria-selected="activeTab === tab.id" :aria-controls="`painel-${tab.id}`">
           {{ tab.label }}
         </button>
       </li>
@@ -55,12 +55,12 @@
 
             <div class="input-group">
               <input id="cpf" class="form-control" :disabled="registros.cpf_validado" type="text"
-                inputmode="numeric" v-model="registros.item.pessoa_cpf" v-mask="'###.###.###-##'"
-                :aria-invalid="!!erros.pessoa_cpf" aria-describedby="cpf-ajuda cpf-erro"
-                @keyup.enter="getCpfDetails(true)" placeholder="000.000.000-00" />
+                     inputmode="numeric" v-model="registros.item.pessoa_cpf" v-mask="'###.###.###-##'"
+                     :aria-invalid="!!erros.pessoa_cpf" aria-describedby="cpf-ajuda cpf-erro"
+                     @keyup.enter="getCpfDetails(true)" placeholder="000.000.000-00"/>
 
               <button :disabled="registros.cpf_validado" class="btn btn-outline-primary" type="button"
-                @click="getCpfDetails(true)" aria-label="Buscar dados pelo CPF informado">
+                      @click="getCpfDetails(true)" aria-label="Buscar dados pelo CPF informado">
                 Buscar CPF
               </button>
             </div>
@@ -70,7 +70,7 @@
 
             <transition name="fade">
               <div v-if="registros.cpf_nao_encontrado" class="alert alert-warning mt-2 d-flex align-items-center"
-                role="alert">
+                   role="alert">
                 <span class="me-2" aria-hidden="true">⚠️</span>
                 <span>CPF não encontrado. Verifique se digitou corretamente ou preencha os dados manualmente abaixo.</span>
               </div>
@@ -89,8 +89,8 @@
               <label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <input class="form-control" :disabled="registros.cpf_validado" type="text"
-              v-model="registros.item.pessoa_nome" id="nome" :aria-invalid="!!erros.pessoa_nome"
-              autocomplete="name" placeholder="Digite seu nome como aparece no RG" />
+                   v-model="registros.item.pessoa_nome" id="nome" :aria-invalid="!!erros.pessoa_nome"
+                   autocomplete="name" placeholder="Digite seu nome como aparece no RG"/>
             <div v-if="erros.pessoa_nome" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_nome }}
             </div>
@@ -99,8 +99,8 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="apelido">Apelido:</label>
             <input class="form-control" :disabled="registros.cpf_validado" type="text"
-              v-model="registros.item.pessoa_apelido" id="apelido"
-              placeholder="Como você prefere ser chamado(a)" />
+                   v-model="registros.item.pessoa_apelido" id="apelido"
+                   placeholder="Como você prefere ser chamado(a)"/>
             <small class="form-text text-muted">Campo opcional. Como você prefere ser chamado(a).</small>
           </div>
 
@@ -109,8 +109,8 @@
               Data de Nascimento:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <input class="form-control" type="date" :disabled="registros.cpf_validado"
-              v-model="registros.item.pessoa_nascimento" id="pessoa_nascimento"
-              :aria-invalid="!!erros.pessoa_nascimento" autocomplete="bday" />
+                   v-model="registros.item.pessoa_nascimento" id="pessoa_nascimento"
+                   :aria-invalid="!!erros.pessoa_nascimento" autocomplete="bday"/>
 
             <div v-if="erros.pessoa_nascimento" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_nascimento }}
@@ -122,8 +122,8 @@
               Celular:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <input class="form-control" id="celular" type="tel" inputmode="tel"
-              v-model="registros.item.pessoa_celular" v-mask="'(##)#####-####'"
-              :aria-invalid="!!erros.pessoa_celular" autocomplete="tel" placeholder="(00)00000-0000" />
+                   v-model="registros.item.pessoa_celular" v-mask="'(##)#####-####'"
+                   :aria-invalid="!!erros.pessoa_celular" autocomplete="tel" placeholder="(00)00000-0000"/>
             <small class="form-text text-muted">Informe seu celular com DDD. Usamos para entrar em contato.</small>
             <div v-if="erros.pessoa_celular" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_celular }}
@@ -135,8 +135,8 @@
               Email:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <input class="form-control" type="email" inputmode="email" v-model="registros.item.pessoa_email"
-              id="pessoa_email" :aria-invalid="!!erros.pessoa_email" autocomplete="email"
-              placeholder="seuemail@exemplo.com" />
+                   id="pessoa_email" :aria-invalid="!!erros.pessoa_email" autocomplete="email"
+                   placeholder="seuemail@exemplo.com"/>
             <div v-if="erros.pessoa_email" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_email }}
             </div>
@@ -145,17 +145,17 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="telefoneResidencial">Telefone Fixo:</label>
             <input class="form-control" id="telefoneResidencial" type="tel"
-              v-model="registros.item.pessoa_telefone_residencial" v-mask="'(##)####-####'"
-              placeholder="(00)0000-0000" />
+                   v-model="registros.item.pessoa_telefone_residencial" v-mask="'(##)####-####'"
+                   placeholder="(00)0000-0000"/>
             <small class="form-text text-muted">Campo opcional.</small>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="profissao">Profissão:</label>
             <multiselect v-model="registros.item.pessoa_profissao" :options="profissao" :taggable="true"
-              :searchable="true" :close-on-select="true" :clear-on-select="true" :hide-selected="true"
-              placeholder="Digite para buscar ou adicionar..." id="profissao" :show-labels="true"
-              @tag="profissao.push($event); registros.item.pessoa_profissao = $event" />
+                         :searchable="true" :close-on-select="true" :clear-on-select="true" :hide-selected="true"
+                         placeholder="Digite para buscar ou adicionar..." id="profissao" :show-labels="true"
+                         @tag="profissao.push($event); registros.item.pessoa_profissao = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma profissão ou digitar uma nova.</small>
           </div>
 
@@ -164,8 +164,8 @@
               Sexo:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <multiselect v-model="registros.item.pessoa_sexo" :options="sexo" placeholder="Selecione ou pesquise..."
-              :searchable="true" :close-on-select="true" id="sexo" :show-labels="false" :taggable="true"
-              @tag="sexo.push($event); registros.item.pessoa_sexo = $event" />
+                         :searchable="true" :close-on-select="true" id="sexo" :show-labels="false" :taggable="true"
+                         @tag="sexo.push($event); registros.item.pessoa_sexo = $event"/>
             <div v-if="erros.pessoa_sexo" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_sexo }}
             </div>
@@ -174,14 +174,14 @@
           <!-- Aviso visível do cônjuge -->
           <transition name="fade">
             <div v-if="comConjuge.includes(registros.item.pessoa_estado_civil)" class="conjuge-alert"
-              role="alert" aria-live="polite">
+                 role="alert" aria-live="polite">
               <div class="conjuge-alert__icon" aria-hidden="true">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                  <circle cx="9" cy="7" r="4" />
-                  <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                  <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                  <circle cx="9" cy="7" r="4"/>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                 </svg>
               </div>
               <div class="conjuge-alert__content">
@@ -199,9 +199,10 @@
               Estado Civil:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
             <multiselect v-model="registros.item.pessoa_estado_civil" :options="estadoCivil"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true" id="estadoCivil"
-              :show-labels="false" :taggable="true"
-              @tag="estadoCivil.push($event); registros.item.pessoa_estado_civil = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="estadoCivil"
+                         :show-labels="false" :taggable="true"
+                         @tag="estadoCivil.push($event); registros.item.pessoa_estado_civil = $event"/>
             <div v-if="erros.pessoa_estado_civil" class="text-danger mt-1" role="alert">
               <span aria-hidden="true">⚠️</span> {{ erros.pessoa_estado_civil }}
             </div>
@@ -217,12 +218,12 @@
 
               <div class="input-group">
                 <input id="conjugeCpf" class="form-control" type="text" inputmode="numeric"
-                  v-model="registros.item.conjuge_cpf" v-mask="'###.###.###-##'"
-                  @keyup.enter="getCpfDetails(false, true)" :disabled="registros.cpf_validado_conjuge"
-                  :aria-invalid="!!erros.conjuge_cpf" placeholder="000.000.000-00" />
+                       v-model="registros.item.conjuge_cpf" v-mask="'###.###.###-##'"
+                       @keyup.enter="getCpfDetails(false, true)" :disabled="registros.cpf_validado_conjuge"
+                       :aria-invalid="!!erros.conjuge_cpf" placeholder="000.000.000-00"/>
 
                 <button :disabled="registros.cpf_validado_conjuge" class="btn btn-outline-primary" type="button"
-                  @click="getCpfDetails(false, true)" aria-label="Buscar dados do cônjuge pelo CPF">
+                        @click="getCpfDetails(false, true)" aria-label="Buscar dados do cônjuge pelo CPF">
                   Buscar CPF
                 </button>
               </div>
@@ -243,8 +244,8 @@
                 Nome Completo:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
               <input class="form-control" type="text" v-model="registros.item.conjuge_nome"
-                :disabled="registros.cpf_validado_conjuge" id="nomeConjuge"
-                :aria-invalid="!!erros.conjuge_nome" />
+                     :disabled="registros.cpf_validado_conjuge" id="nomeConjuge"
+                     :aria-invalid="!!erros.conjuge_nome"/>
               <div v-if="erros.conjuge_nome" class="text-danger mt-1" role="alert">
                 <span aria-hidden="true">⚠️</span> {{ erros.conjuge_nome }}
               </div>
@@ -253,7 +254,7 @@
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="apelidoConjuge">Apelido:</label>
               <input class="form-control" type="text" v-model="registros.item.conjuge_apelido"
-                :disabled="registros.cpf_validado_conjuge" id="apelidoConjuge" />
+                     :disabled="registros.cpf_validado_conjuge" id="apelidoConjuge"/>
             </div>
 
             <div class="mb-3">
@@ -261,8 +262,8 @@
                 Data de Nascimento:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
               <input class="form-control" type="date" :disabled="registros.cpf_validado_conjuge"
-                v-model="registros.item.conjuge_nascimento" id="conjugeNascimento"
-                :aria-invalid="!!erros.conjuge_nascimento" />
+                     v-model="registros.item.conjuge_nascimento" id="conjugeNascimento"
+                     :aria-invalid="!!erros.conjuge_nascimento"/>
               <div v-if="erros.conjuge_nascimento" class="text-danger mt-1" role="alert">
                 <span aria-hidden="true">⚠️</span> {{ erros.conjuge_nascimento }}
               </div>
@@ -273,8 +274,8 @@
                 Celular:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
               <input id="conjugeCelular" class="form-control" type="tel" inputmode="tel"
-                v-model="registros.item.conjuge_celular" v-mask="'(##)#####-####'"
-                :aria-invalid="!!erros.conjuge_celular" placeholder="(00)00000-0000" />
+                     v-model="registros.item.conjuge_celular" v-mask="'(##)#####-####'"
+                     :aria-invalid="!!erros.conjuge_celular" placeholder="(00)00000-0000"/>
               <div v-if="erros.conjuge_celular" class="text-danger mt-1" role="alert">
                 <span aria-hidden="true">⚠️</span> {{ erros.conjuge_celular }}
               </div>
@@ -285,7 +286,7 @@
                 Email do Cônjuge:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
               <input class="form-control" type="email" inputmode="email" v-model="registros.item.conjuge_email"
-                id="emailConjuge" :aria-invalid="!!erros.conjuge_email" autocomplete="email" />
+                     id="emailConjuge" :aria-invalid="!!erros.conjuge_email" autocomplete="email"/>
               <div v-if="erros.conjuge_email" class="text-danger mt-1" role="alert">
                 <span aria-hidden="true">⚠️</span> {{ erros.conjuge_email }}
               </div>
@@ -294,9 +295,9 @@
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="conjugeProfissao">Profissão:</label>
               <multiselect v-model="registros.item.conjuge_profissao" :options="profissao"
-                placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-                id="conjugeProfissao" :show-labels="false" :taggable="true"
-                @tag="profissao.push($event); registros.item.conjuge_profissao = $event" />
+                           placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                           id="conjugeProfissao" :show-labels="false" :taggable="true"
+                           @tag="profissao.push($event); registros.item.conjuge_profissao = $event"/>
               <small class="form-text text-muted">Você pode selecionar uma profissão ou digitar uma nova.</small>
             </div>
 
@@ -305,9 +306,9 @@
                 Sexo:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
               <multiselect v-model="registros.item.conjuge_sexo" :options="sexo"
-                placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-                id="conjuge_sexo" :show-labels="false" :taggable="true"
-                @tag="sexo.push($event); registros.item.conjuge_sexo = $event" />
+                           placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                           id="conjuge_sexo" :show-labels="false" :taggable="true"
+                           @tag="sexo.push($event); registros.item.conjuge_sexo = $event"/>
               <div v-if="erros.conjuge_sexo" class="text-danger mt-1" role="alert">
                 <span aria-hidden="true">⚠️</span> {{ erros.conjuge_sexo }}
               </div>
@@ -316,14 +317,14 @@
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="dataCasamento">Data de Casamento:</label>
               <input class="form-control" type="date" v-model="registros.item.pessoa_data_casamento"
-                id="dataCasamento" />
+                     id="dataCasamento"/>
               <small class="form-text text-muted">Campo opcional.</small>
             </div>
 
             <div class="mb-3">
               <label class="form-label text-dark text-start" for="apelidoCasal">Apelido do Casal:</label>
               <input class="form-control" type="text" v-model="registros.item.apelido_casal" id="apelidoCasal"
-                placeholder='Ex: "Maria e João"' />
+                     placeholder='Ex: "Maria e João"'/>
               <small class="form-text text-muted">Campo opcional. Como o casal é conhecido.</small>
             </div>
           </div>
@@ -344,29 +345,29 @@
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="fotoPrincipal">Foto da Pessoa:</label>
           <input class="form-control" type="file" @change="handleFileUpload('fotoPrincipal', $event)"
-            accept="image/*" id="fotoPrincipal" aria-describedby="ajuda-foto-principal" />
+                 accept="image/*" id="fotoPrincipal" aria-describedby="ajuda-foto-principal"/>
           <small id="ajuda-foto-principal" class="form-text text-muted">
             Escolha uma foto sua para o cadastro.
           </small>
           <img v-show="registros.item.pessoa_foto" alt="Pré-visualização da sua foto" id="pessoa_foto"
-            width="200" height="200" class="img-thumbnail rounded mt-2" />
+               width="200" height="200" class="img-thumbnail rounded mt-2"/>
         </div>
 
         <div v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="fotoConjuge">Foto do Cônjuge:</label>
             <input class="form-control" type="file" @change="handleFileUpload('fotoConjuge', $event)"
-              accept="image/*" id="fotoConjuge" />
+                   accept="image/*" id="fotoConjuge"/>
             <img v-show="registros.item.foto_conjuge" alt="Pré-visualização da foto do cônjuge" id="foto_conjuge"
-              width="200" height="200" class="img-thumbnail rounded mt-2">
+                 width="200" height="200" class="img-thumbnail rounded mt-2">
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="fotoCasal">Foto do Casal:</label>
             <input class="form-control" type="file" @change="handleFileUpload('fotoCasal', $event)"
-              accept="image/*" id="fotoCasal" />
+                   accept="image/*" id="fotoCasal"/>
             <img v-show="registros.item.pessoa_foto_casal" alt="Pré-visualização da foto do casal"
-              id="pessoa_foto_casal" width="200" height="200" class="img-thumbnail rounded mt-2">
+                 id="pessoa_foto_casal" width="200" height="200" class="img-thumbnail rounded mt-2">
           </div>
         </div>
       </form>
@@ -378,40 +379,40 @@
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="cep">CEP:</label>
           <input class="form-control" id="cep" type="text" inputmode="numeric"
-            v-model="registros.item.pessoa_cep" v-mask="'#####-###'" autocomplete="postal-code"
-            placeholder="00000-000" />
+                 v-model="registros.item.pessoa_cep" v-mask="'#####-###'" autocomplete="postal-code"
+                 placeholder="00000-000"/>
           <small class="form-text text-muted">Após digitar o CEP, ele faz a busca automática.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="endereco">Endereço Residencial:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_endereco" id="endereco"
-            :disabled="camposBloqueados" autocomplete="street-address" />
+                 :disabled="camposBloqueados" autocomplete="street-address"/>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="complemento">Complemento:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_complemento" id="complemento"
-            placeholder="Apartamento, bloco, casa, ponto de referência..." />
+                 placeholder="Apartamento, bloco, casa, ponto de referência..."/>
           <small class="form-text text-muted">Campo opcional.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="bairro">Bairro:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_bairro" id="bairro"
-            :disabled="camposBloqueados" />
+                 :disabled="camposBloqueados"/>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="cidade">Cidade:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_cidade" id="cidade"
-            :disabled="camposBloqueados" />
+                 :disabled="camposBloqueados"/>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="uf">UF:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_uf" id="uf"
-            :disabled="camposBloqueados" maxlength="2" />
+                 :disabled="camposBloqueados" maxlength="2"/>
         </div>
       </form>
     </div>
@@ -426,56 +427,56 @@
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="religiao"> Religião: </label>
           <multiselect v-model="registros.item.pessoa_religiao" :options="religiao"
-            placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true" id="religiao"
-            :show-labels="false" :taggable="true"
-            @tag="religiao.push($event); registros.item.pessoa_religiao = $event" />
+                       placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true" id="religiao"
+                       :show-labels="false" :taggable="true"
+                       @tag="religiao.push($event); registros.item.pessoa_religiao = $event"/>
           <small class="form-text text-muted">Você pode selecionar uma religião ou digitar uma nova.</small>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_sacramento_batismo"
-            id="batizado" true-value="S" false-value="N" />
+                 id="batizado" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark" for="batizado">Batizado</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_sacramento_eucaristia"
-            id="primeiraComunhao" true-value="S" false-value="N" />
+                 id="primeiraComunhao" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="primeiraComunhao">Primeira Comunhão</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_sacramento_crisma"
-            id="crismado" true-value="S" false-value="N" />
+                 id="crismado" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="crismado">Crismado</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_atuante_igreja"
-            id="atuanteIgreja" true-value="S" false-value="N" />
+                 id="atuanteIgreja" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="atuanteIgreja">Atuante na Igreja</label>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="paroquia"> Paróquia que Frequenta: </label>
           <multiselect v-model="registros.item.pessoa_paroquia" :options="paroquia"
-            placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true" id="paroquia"
-            :show-labels="false" :taggable="true"
-            @tag="paroquia.push($event); registros.item.pessoa_paroquia = $event" />
+                       placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true" id="paroquia"
+                       :show-labels="false" :taggable="true"
+                       @tag="paroquia.push($event); registros.item.pessoa_paroquia = $event"/>
           <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="pastorais">Pastorais ou Serviços:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_pastorais_ou_servicos"
-            id="pastorais" placeholder="Pastorais, ministérios ou serviços que participa" />
+                 id="pastorais" placeholder="Pastorais, ministérios ou serviços que participa"/>
           <small class="form-text text-muted">Campo opcional.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="movimentos">Movimentos:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_movimento_pertencente"
-            id="movimentos" />
+                 id="movimentos"/>
           <small class="form-text text-muted">Campo opcional.</small>
         </div>
 
@@ -484,14 +485,14 @@
             Seita/Ideologia/Outra Religião:
           </label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_seita_ideologia_religiao"
-            id="outraReligiao" />
+                 id="outraReligiao"/>
           <small class="form-text text-muted">Campo opcional.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label text-dark text-start" for="entidade">Entidade que Frequenta:</label>
           <input class="form-control" type="text" v-model="registros.item.pessoa_entidade_pertencente"
-            id="entidade" />
+                 id="entidade"/>
           <small class="form-text text-muted">Campo opcional.</small>
         </div>
 
@@ -504,34 +505,34 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="conjugeReligiao"> Religião: </label>
             <multiselect v-model="registros.item.conjuge_religiao" :options="religiao"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-              id="conjugeReligiao" :show-labels="false" :taggable="true"
-              @tag="religiao.push($event); registros.item.conjuge_religiao = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="conjugeReligiao" :show-labels="false" :taggable="true"
+                         @tag="religiao.push($event); registros.item.conjuge_religiao = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma religião ou digitar uma nova.</small>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_sacramento_batismo"
-              id="conjuge_sacramento_batismo" true-value="S" false-value="N" />
+                   id="conjuge_sacramento_batismo" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark" for="conjuge_sacramento_batismo">Batizado</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_sacramento_eucaristia"
-              id="conjuge_sacramento_eucaristia" true-value="S" false-value="N" />
+                   id="conjuge_sacramento_eucaristia" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="conjuge_sacramento_eucaristia">Primeira
               Comunhão</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_sacramento_crisma"
-              id="conjuge_sacramento_crisma" true-value="S" false-value="N" />
+                   id="conjuge_sacramento_crisma" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="conjuge_sacramento_crisma">Crismado</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_atuante_igreja"
-              id="conjuge_atuante_igreja" true-value="S" false-value="N" />
+                   id="conjuge_atuante_igreja" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="conjuge_atuante_igreja">Atuante na Igreja</label>
           </div>
 
@@ -540,9 +541,9 @@
               Paróquia que Frequenta:
             </label>
             <multiselect v-model="registros.item.conjuge_paroquia" :options="paroquia"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-              id="conjuge_pessoa_paroquia" :show-labels="false" :taggable="true"
-              @tag="paroquia.push($event); registros.item.conjuge_paroquia = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="conjuge_pessoa_paroquia" :show-labels="false" :taggable="true"
+                         @tag="paroquia.push($event); registros.item.conjuge_paroquia = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
           </div>
 
@@ -551,7 +552,7 @@
               Pastorais ou Serviços:
             </label>
             <input class="form-control" type="text" v-model="registros.item.conjuge_pastorais_ou_servicos"
-              id="conjuge_pessoa_pastorais_ou_servicos" />
+                   id="conjuge_pessoa_pastorais_ou_servicos"/>
             <small class="form-text text-muted">Campo opcional.</small>
           </div>
 
@@ -560,7 +561,7 @@
               Movimentos que participa:
             </label>
             <input class="form-control" type="text" v-model="registros.item.conjuge_movimento_pertencente"
-              id="conjuge_pessoa_movimento_pertencente" />
+                   id="conjuge_pessoa_movimento_pertencente"/>
             <small class="form-text text-muted">Campo opcional.</small>
           </div>
 
@@ -569,7 +570,7 @@
               Seita/Ideologia/Outra Religião:
             </label>
             <input class="form-control" type="text" v-model="registros.item.conjuge_seita_ideologia_religiao"
-              id="conjuge_pessoa_seita_ideologia_religiao" />
+                   id="conjuge_pessoa_seita_ideologia_religiao"/>
             <small class="form-text text-muted">Campo opcional.</small>
           </div>
 
@@ -578,22 +579,22 @@
               Entidade que Frequenta:
             </label>
             <input class="form-control" type="text" v-model="registros.item.conjuge_entidade_pertencente"
-              id="conjuge_pessoa_entidade_pertencente" />
+                   id="conjuge_pessoa_entidade_pertencente"/>
             <small class="form-text text-muted">Campo opcional.</small>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_casamento_civil"
-              id="conjuge_pessoa_casamento_civil" true-value="S" false-value="N" />
+                   id="conjuge_pessoa_casamento_civil" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="conjuge_pessoa_casamento_civil">Casamento
               Civil</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_casamento_religioso"
-              id="conjuge_pessoa_casamento_religioso" true-value="S" false-value="N" />
+                   id="conjuge_pessoa_casamento_religioso" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start"
-              for="conjuge_pessoa_casamento_religioso">Casamento Religioso</label>
+                   for="conjuge_pessoa_casamento_religioso">Casamento Religioso</label>
           </div>
 
           <div class="mb-3">
@@ -601,9 +602,9 @@
               Paróquia do Casamento Religioso:
             </label>
             <multiselect v-model="registros.item.pessoa_paroquia_casamento" :options="paroquia"
-              placeholder="Selecione uma paróquia ou digite para adicionar nova..." :searchable="true"
-              :close-on-select="true" id="pessoa_paroquia_casamento2" :show-labels="true" :taggable="true"
-              @tag="paroquia.push($event); registros.item.pessoa_paroquia_casamento = $event" />
+                         placeholder="Selecione uma paróquia ou digite para adicionar nova..." :searchable="true"
+                         :close-on-select="true" id="pessoa_paroquia_casamento2" :show-labels="true" :taggable="true"
+                         @tag="paroquia.push($event); registros.item.pessoa_paroquia_casamento = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
           </div>
         </div>
@@ -621,31 +622,32 @@
       <form @submit.prevent novalidate>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_cantar"
-            id="habilidade_cantar" :true-value="'306'" :false-value="null" />
+                 id="habilidade_cantar" :true-value="'306'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_cantar">Cantar</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_cozinhar"
-            id="habilidade_cozinhar" :true-value="'647'" :false-value="null" />
+                 id="habilidade_cozinhar" :true-value="'647'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_cozinhar">Cozinhar</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_eletronica"
-            id="habilidade_eletronica" :true-value="'6522'" :false-value="null" />
+                 id="habilidade_eletronica" :true-value="'6522'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_eletronica">Eletrônica</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_falar_em_publico"
-            id="habilidade_falar_em_publico" :true-value="'632'" :false-value="null" />
-          <label class="form-check-label text-dark text-start" for="habilidade_falar_em_publico">Falar em Público</label>
+                 id="habilidade_falar_em_publico" :true-value="'632'" :false-value="null"/>
+          <label class="form-check-label text-dark text-start" for="habilidade_falar_em_publico">Falar em
+            Público</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_ministro_eucaristia"
-            id="habilidade_ministro_eucaristia" :true-value="'633'" :false-value="null" />
+                 id="habilidade_ministro_eucaristia" :true-value="'633'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_ministro_eucaristia">
             Ministro Extraordinário da Eucaristia
           </label>
@@ -653,43 +655,44 @@
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_coordenar_grupos"
-            id="habilidade_coordenar_grupos" :true-value="'649'" :false-value="null" />
-          <label class="form-check-label text-dark text-start" for="habilidade_coordenar_grupos">Coordenar Grupos</label>
+                 id="habilidade_coordenar_grupos" :true-value="'649'" :false-value="null"/>
+          <label class="form-check-label text-dark text-start" for="habilidade_coordenar_grupos">Coordenar
+            Grupos</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_informatica"
-            id="habilidade_informatica" :true-value="'648'" :false-value="null" />
+                 id="habilidade_informatica" :true-value="'648'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_informatica">Informática</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_tocar_violao"
-            id="habilidade_tocar_violao" :true-value="'308'" :false-value="null" />
+                 id="habilidade_tocar_violao" :true-value="'308'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_tocar_violao">Tocar Violão</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_servir_cafe"
-            id="habilidade_servir_cafe" :true-value="'634'" :false-value="null" />
+                 id="habilidade_servir_cafe" :true-value="'634'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_servir_cafe">Servir Café</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_desenho"
-            id="habilidade_desenho" :true-value="'635'" :false-value="null" />
+                 id="habilidade_desenho" :true-value="'635'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_desenho">Desenhar</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_limpeza"
-            id="habilidade_limpeza" :true-value="'636'" :false-value="null" />
+                 id="habilidade_limpeza" :true-value="'636'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_limpeza">Limpeza</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.habilidade_liturgia"
-            id="habilidade_liturgia" :true-value="'643'" :false-value="null" />
+                 id="habilidade_liturgia" :true-value="'643'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="habilidade_liturgia">Atos Litúrgicos</label>
         </div>
 
@@ -700,31 +703,33 @@
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_cantar"
-              id="conjuge_habilidade_cantar" :true-value="'306'" :false-value="null" />
+                   id="conjuge_habilidade_cantar" :true-value="'306'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_cantar">Cantar</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_cozinhar"
-              id="conjuge_habilidade_cozinhar" :true-value="'647'" :false-value="null" />
+                   id="conjuge_habilidade_cozinhar" :true-value="'647'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_cozinhar">Cozinhar</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_eletronica"
-              id="conjuge_habilidade_eletronica" :true-value="'6522'" :false-value="null" />
+                   id="conjuge_habilidade_eletronica" :true-value="'6522'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_eletronica">Eletrônica</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_falar_em_publico"
-              id="conjuge_habilidade_falar_em_publico" :true-value="'632'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_falar_em_publico">Falar em Público</label>
+                   id="conjuge_habilidade_falar_em_publico" :true-value="'632'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_falar_em_publico">Falar em
+              Público</label>
           </div>
 
           <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_ministro_eucaristia"
-              id="conjuge_habilidade_ministro_eucaristia" :true-value="'633'" :false-value="null" />
+            <input class="form-check-input" type="checkbox"
+                   v-model="registros.item.conjuge_habilidade_ministro_eucaristia"
+                   id="conjuge_habilidade_ministro_eucaristia" :true-value="'633'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_ministro_eucaristia">
               Ministro Extraordinário da Eucaristia
             </label>
@@ -732,44 +737,49 @@
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_coordenar_grupos"
-              id="conjuge_habilidade_coordenar_grupos" :true-value="'649'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_coordenar_grupos">Coordenar Grupos</label>
+                   id="conjuge_habilidade_coordenar_grupos" :true-value="'649'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_coordenar_grupos">Coordenar
+              Grupos</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_informatica"
-              id="conjuge_habilidade_informatica" :true-value="'648'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_informatica">Informática</label>
+                   id="conjuge_habilidade_informatica" :true-value="'648'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start"
+                   for="conjuge_habilidade_informatica">Informática</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_tocar_violao"
-              id="conjuge_habilidade_tocar_violao" :true-value="'308'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_tocar_violao">Tocar Violão</label>
+                   id="conjuge_habilidade_tocar_violao" :true-value="'308'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_tocar_violao">Tocar
+              Violão</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_servir_cafe"
-              id="conjuge_habilidade_servir_cafe" :true-value="'634'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_servir_cafe">Servir Café</label>
+                   id="conjuge_habilidade_servir_cafe" :true-value="'634'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_servir_cafe">Servir
+              Café</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_desenho"
-              id="conjuge_habilidade_desenho" :true-value="'635'" :false-value="null" />
+                   id="conjuge_habilidade_desenho" :true-value="'635'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_desenho">Desenhar</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_limpeza"
-              id="conjuge_habilidade_limpeza" :true-value="'636'" :false-value="null" />
+                   id="conjuge_habilidade_limpeza" :true-value="'636'" :false-value="null"/>
             <label class="form-check-label text-dark text-start" for="conjuge_habilidade_limpeza">Limpeza</label>
           </div>
 
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_habilidade_liturgia"
-              id="conjuge_habilidade_liturgia" :true-value="'643'" :false-value="null" />
-            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_liturgia">Atos Litúrgicos</label>
+                   id="conjuge_habilidade_liturgia" :true-value="'643'" :false-value="null"/>
+            <label class="form-check-label text-dark text-start" for="conjuge_habilidade_liturgia">Atos
+              Litúrgicos</label>
           </div>
         </div>
 
@@ -786,20 +796,20 @@
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_email_autorizado"
-            id="imprimirEmail" true-value="S" false-value="N" />
+                 id="imprimirEmail" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="imprimirEmail">Autorizo Imprimir Email</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_celular_autorizado"
-            id="imprimirCelular" true-value="S" false-value="N" />
+                 id="imprimirCelular" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="imprimirCelular">Autorizo Imprimir Celular</label>
         </div>
 
         <div>
           <div class="form-check mb-3" v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_email_autorizado"
-              id="imprimirEmailConjuge" true-value="S" false-value="N" />
+                   id="imprimirEmailConjuge" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="imprimirEmailConjuge">
               Autorizo Imprimir Email do Cônjuge
             </label>
@@ -807,7 +817,7 @@
 
           <div class="form-check mb-3" v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
             <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_celular_autorizado"
-              id="imprimirCelularConjuge" true-value="S" false-value="N" />
+                   id="imprimirCelularConjuge" true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="imprimirCelularConjuge">
               Autorizo Imprimir Celular do Cônjuge
             </label>
@@ -816,7 +826,7 @@
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.tel_residencial_autorizado"
-            id="imprimirTelefoneFixo" true-value="S" false-value="N" />
+                 id="imprimirTelefoneFixo" true-value="S" false-value="N"/>
           <label class="form-check-label text-dark text-start" for="imprimirTelefoneFixo">
             Autorizo Imprimir Telefone Fixo
           </label>
@@ -830,13 +840,13 @@
       <form @submit.prevent novalidate>
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.fazerECC" id="fazerECC"
-            true-value="S" false-value="N" @change="limparFezECC" />
+                 true-value="S" false-value="N" @change="limparFezECC"/>
           <label class="form-check-label text-dark text-start" for="fazerECC">Deseja fazer o ECC?</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.fezECC" id="fezECC"
-            true-value="S" false-value="N" @change="limparFazerECC" />
+                 true-value="S" false-value="N" @change="limparFazerECC"/>
           <label class="form-check-label text-dark text-start" for="fezECC">Já fez o ECC?</label>
         </div>
 
@@ -844,17 +854,17 @@
           <label class="form-label text-dark text-start fw-bold">Qual etapa?</label>
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_etapa_1" id="etapa1"
-              true-value="S" false-value="N" />
+                   true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="etapa1">1ª Etapa</label>
           </div>
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_etapa_2" id="etapa2"
-              true-value="S" false-value="N" />
+                   true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="etapa2">2ª Etapa</label>
           </div>
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_etapa_3" id="etapa3"
-              true-value="S" false-value="N" />
+                   true-value="S" false-value="N"/>
             <label class="form-check-label text-dark text-start" for="etapa3">3ª Etapa</label>
           </div>
         </div>
@@ -864,7 +874,7 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="numeroEtapa1">Número da 1ª Etapa:</label>
             <input class="form-control" type="number" inputmode="numeric"
-              v-model="registros.item.pessoa_etapa_1_numero" id="numeroEtapa1" />
+                   v-model="registros.item.pessoa_etapa_1_numero" id="numeroEtapa1"/>
           </div>
 
           <div class="mb-3">
@@ -872,21 +882,21 @@
               Data de Início da 1ª Etapa:
             </label>
             <input class="form-control" type="date" v-model="registros.item.pessoa_etapa_1_data_inicio"
-              id="dataInicioEtapa1" />
+                   id="dataInicioEtapa1"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="localEtapa1">Local da 1ª Etapa:</label>
             <input class="form-control" type="text" v-model="registros.item.pessoa_etapa_1_local"
-              id="localEtapa1" />
+                   id="localEtapa1"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="siglaEtapa1">Paróquia do ECC da 1ª Etapa</label>
             <multiselect v-model="registros.item.pessoa_etapa_1_nucleo_sigla" :options="paroquia"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-              id="siglaEtapa1" :show-labels="false" :taggable="true"
-              @tag="paroquia.push($event); registros.item.pessoa_etapa_1_nucleo_sigla = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="siglaEtapa1" :show-labels="false" :taggable="true"
+                         @tag="paroquia.push($event); registros.item.pessoa_etapa_1_nucleo_sigla = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
           </div>
         </div>
@@ -896,7 +906,7 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="numeroEtapa2">Número da 2ª Etapa:</label>
             <input class="form-control" type="number" inputmode="numeric"
-              v-model="registros.item.pessoa_etapa_2_numero" id="numeroEtapa2" />
+                   v-model="registros.item.pessoa_etapa_2_numero" id="numeroEtapa2"/>
           </div>
 
           <div class="mb-3">
@@ -904,21 +914,21 @@
               Data de Início da 2ª Etapa:
             </label>
             <input class="form-control" type="date" v-model="registros.item.pessoa_etapa_2_data_inicio"
-              id="dataInicioEtapa2" />
+                   id="dataInicioEtapa2"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="localEtapa2">Local da 2ª Etapa:</label>
             <input class="form-control" type="text" v-model="registros.item.pessoa_etapa_2_local"
-              id="localEtapa2" />
+                   id="localEtapa2"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="siglaEtapa2">Paróquia do ECC da 2ª Etapa</label>
             <multiselect v-model="registros.item.pessoa_etapa_2_nucleo_sigla" :options="paroquia"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-              id="siglaEtapa2" :show-labels="false" :taggable="true"
-              @tag="paroquia.push($event); registros.item.pessoa_etapa_2_nucleo_sigla = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="siglaEtapa2" :show-labels="false" :taggable="true"
+                         @tag="paroquia.push($event); registros.item.pessoa_etapa_2_nucleo_sigla = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
           </div>
         </div>
@@ -928,7 +938,7 @@
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="numeroEtapa3">Número da 3ª Etapa:</label>
             <input class="form-control" type="number" inputmode="numeric"
-              v-model="registros.item.pessoa_etapa_3_numero" id="numeroEtapa3" />
+                   v-model="registros.item.pessoa_etapa_3_numero" id="numeroEtapa3"/>
           </div>
 
           <div class="mb-3">
@@ -936,21 +946,21 @@
               Data de Início da 3ª Etapa:
             </label>
             <input class="form-control" type="date" v-model="registros.item.pessoa_etapa_3_data_inicio"
-              id="dataInicioEtapa3" />
+                   id="dataInicioEtapa3"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="localEtapa3">Local da 3ª Etapa:</label>
             <input class="form-control" type="text" v-model="registros.item.pessoa_etapa_3_local"
-              id="localEtapa3" />
+                   id="localEtapa3"/>
           </div>
 
           <div class="mb-3">
             <label class="form-label text-dark text-start" for="siglaEtapa3">Paróquia do ECC da 3ª Etapa</label>
             <multiselect v-model="registros.item.pessoa_etapa_3_nucleo_sigla" :options="paroquia"
-              placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
-              id="siglaEtapa3" :show-labels="false" :taggable="true"
-              @tag="paroquia.push($event); registros.item.pessoa_etapa_3_nucleo_sigla = $event" />
+                         placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
+                         id="siglaEtapa3" :show-labels="false" :taggable="true"
+                         @tag="paroquia.push($event); registros.item.pessoa_etapa_3_nucleo_sigla = $event"/>
             <small class="form-text text-muted">Você pode selecionar uma paróquia ou digitar uma nova.</small>
           </div>
         </div>
@@ -972,67 +982,67 @@
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_secretaria"
-            id="equipe_secretaria" :true-value="'658'" :false-value="null" />
+                 id="equipe_secretaria" :true-value="'658'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_secretaria">Secretaria</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_cozinha"
-            id="equipe_cozinha" :true-value="'659'" :false-value="null" />
+                 id="equipe_cozinha" :true-value="'659'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_cozinha">Cozinha</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_compras"
-            id="equipe_compras" :true-value="'660'" :false-value="null" />
+                 id="equipe_compras" :true-value="'660'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_compras">Compras</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_visitacao"
-            id="equipe_visitacao" :true-value="'661'" :false-value="null" />
+                 id="equipe_visitacao" :true-value="'661'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_visitacao">Visitação</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_acolhida"
-            id="equipe_acolhida" :true-value="'662'" :false-value="null" />
+                 id="equipe_acolhida" :true-value="'662'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_acolhida">Acolhida</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_cafe_minimercado"
-            id="equipe_cafe_minimercado" :true-value="'663'" :false-value="null" />
+                 id="equipe_cafe_minimercado" :true-value="'663'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_cafe_minimercado">Café e Minimercado</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_liturgia_vigilia"
-            id="equipe_liturgia_vigilia" :true-value="'664'" :false-value="null" />
+                 id="equipe_liturgia_vigilia" :true-value="'664'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_liturgia_vigilia">Liturgia e Vigília</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_ordem_limpeza"
-            id="equipe_ordem_limpeza" :true-value="'665'" :false-value="null" />
+                 id="equipe_ordem_limpeza" :true-value="'665'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_ordem_limpeza">Ordem e Limpeza</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_palestras"
-            id="equipe_palestras" :true-value="'720'" :false-value="null" />
+                 id="equipe_palestras" :true-value="'720'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_palestras">Palestras</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_sala_canto"
-            id="equipe_sala_canto" :true-value="'721'" :false-value="null" />
+                 id="equipe_sala_canto" :true-value="'721'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_sala_canto">Equipe de Sala - Canto</label>
         </div>
 
         <div class="form-check mb-3">
           <input class="form-check-input" type="checkbox" v-model="registros.item.equipe_boa_vontade"
-            id="equipe_boa_vontade" :true-value="'722'" :false-value="null" />
+                 id="equipe_boa_vontade" :true-value="'722'" :false-value="null"/>
           <label class="form-check-label text-dark text-start" for="equipe_boa_vontade">Boa Vontade</label>
         </div>
 
@@ -1045,16 +1055,16 @@
         <ul class="nav nav-tabs" role="tablist">
           <li class="nav-item" v-for="tabEt in tabsEtapa" :key="`${tabEt.id}_${tabEt.label}`" role="presentation">
             <button type="button" class="nav-link" :class="{ active: etapaTab === tabEt.id }"
-              @click="mudarAbaEtapa(tabEt.id)" v-if="tabEt.libera" role="tab"
-              :aria-selected="etapaTab === tabEt.id">
+                    @click="mudarAbaEtapa(tabEt.id)" v-if="tabEt.libera" role="tab"
+                    :aria-selected="etapaTab === tabEt.id">
               {{ tabEt.label }}
             </button>
           </li>
         </ul>
         <br>
         <EquipeTrabalho :etapa="etapaTab" :registros="registros.item" @atualizarRegistros="receberRegistros"
-          :pessoa-nome="registros.item.pessoa_nome" :conjuge-nome="registros.item.conjuge_nome"
-          :estado-civil="registros.item.pessoa_estado_civil" />
+                        :pessoa-nome="registros.item.pessoa_nome" :conjuge-nome="registros.item.conjuge_nome"
+                        :estado-civil="registros.item.pessoa_estado_civil"/>
       </form>
     </div>
 
@@ -1063,8 +1073,8 @@
         ← Voltar
       </button>
       <button v-if="deveExibirBotao" type="button" class="btn btn-primary"
-        @click="isUltimaTabLiberada ? finalizarQuestionario() : salvarEAvancar()"
-        @keypress.enter="isUltimaTabLiberada ? finalizarQuestionario() : salvarEAvancar()">
+              @click="isUltimaTabLiberada ? finalizarQuestionario() : salvarEAvancar()"
+              @keypress.enter="isUltimaTabLiberada ? finalizarQuestionario() : salvarEAvancar()">
         {{ isUltimaTabLiberada ? '✓ Finalizar Questionário' : 'Avançar →' }}
       </button>
     </div>
@@ -1108,21 +1118,21 @@ export default {
       salvando: false,
       ultimoSalvamento: null,
       tabs: [
-        { id: 'cadastro', label: 'Cadastro', libera: true },
-        { id: 'foto', label: 'Foto', libera: true },
-        { id: 'endereco', label: 'Endereço', libera: true },
-        { id: 'religiao', label: 'Religião', libera: true },
-        { id: 'habilidades', label: 'Habilidades', libera: true },
-        { id: 'autorizacao', label: 'Autorização', libera: true },
-        { id: 'etapas', label: 'Etapas ECC', libera: true },
-        { id: 'equipes_trabalho', label: 'Equipes que Gostaria', libera: false },
-        { id: 'equipes_que_trabalhou', label: 'Equipes que Trabalhou', libera: false },
+        {id: 'cadastro', label: 'Cadastro', libera: true},
+        {id: 'foto', label: 'Foto', libera: true},
+        {id: 'endereco', label: 'Endereço', libera: true},
+        {id: 'religiao', label: 'Religião', libera: true},
+        {id: 'habilidades', label: 'Habilidades', libera: true},
+        {id: 'autorizacao', label: 'Autorização', libera: true},
+        {id: 'etapas', label: 'Etapas ECC', libera: true},
+        {id: 'equipes_trabalho', label: 'Equipes que Gostaria', libera: false},
+        {id: 'equipes_que_trabalhou', label: 'Equipes que Trabalhou', libera: false},
       ],
       etapaTab: 'etapa1',
       tabsEtapa: [
-        { id: 'etapa1', label: 'Etapa 1', libera: false },
-        { id: 'etapa2', label: 'Etapa 2', libera: false },
-        { id: 'etapa3', label: 'Etapa 3', libera: false },
+        {id: 'etapa1', label: 'Etapa 1', libera: false},
+        {id: 'etapa2', label: 'Etapa 2', libera: false},
+        {id: 'etapa3', label: 'Etapa 3', libera: false},
       ],
       registros: {
         cpf_nao_encontrado: false,
@@ -1443,8 +1453,10 @@ export default {
 
       this.registros.item.formulario_id = 145;
 
-      if (this.registros.item?.apelido_casal.length === 0 || this.registros.item.apelido_casal === null) {
-        this.registros.item.apelido_casal = this.registros.item?.pessoa_nome.split(' ')[0] + ' e ' + this.registros.item?.conjuge_nome.split(' ')[0];
+      if (!this.registros.item?.apelido_casal && this.comConjuge.includes(this.registros.item.pessoa_estado_civil)) {
+        const nomePessoa = this.registros.item?.pessoa_nome?.split(' ')[0] ?? '';
+        const nomeConjuge = this.registros.item?.conjuge_nome?.split(' ')[0] ?? '';
+        this.registros.item.apelido_casal = `${nomePessoa} e ${nomeConjuge}`;
       }
 
       let query;
@@ -1713,7 +1725,7 @@ export default {
                   END IF;
                 END;`;
 
-      const data = { query: query }
+      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -1722,31 +1734,32 @@ export default {
         body: JSON.stringify(data)
       }
 
+      // return
       await fetch(this.API_URL + 'action', requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao chamar a API: ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('data', data);
-          this.salvando = false;
-          const agora = new Date();
-          this.ultimoSalvamento = agora.toLocaleTimeString('pt-BR', {
-            hour: '2-digit',
-            minute: '2-digit'
-          });
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao chamar a API: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('data', data);
+            this.salvando = false;
+            const agora = new Date();
+            this.ultimoSalvamento = agora.toLocaleTimeString('pt-BR', {
+              hour: '2-digit',
+              minute: '2-digit'
+            });
 
-          if (alertar) {
-            return this.$router.replace('/end')
-          }
-        })
-        .catch(error => {
-          this.salvando = false;
-          console.log('Erro na chamada à API:', error);
-          return window.alert('Erro: ' + error);
-        })
+            if (alertar) {
+              return this.$router.replace('/end')
+            }
+          })
+          .catch(error => {
+            this.salvando = false;
+            console.log('Erro na chamada à API:', error);
+            return window.alert('Erro: ' + error);
+          })
     },
     async listarDados() {
       const rawUser = sessionStorage.getItem('user');
@@ -1786,8 +1799,8 @@ export default {
                     , pessoa_email                                      pessoa_email
                     , conjuge_celular                                   conjuge_celular
                     , conjuge_email                                     conjuge_email
-                    , TO_CHAR(pessoa_data_nascimento, 'YYYY-MM-DD')     pessoa_nascimento
-                    , TO_CHAR(pessoa_data_casamento, 'YYYY-MM-DD')      pessoa_data_casamento
+                    , to_char(pessoa_data_nascimento, 'YYYY-MM-DD')     pessoa_nascimento
+                    , to_char(pessoa_data_casamento, 'YYYY-MM-DD')      pessoa_data_casamento
                     , apelido_casal
                     , pessoa_sexo                                       pessoa_sexo
                     , pessoa_religiao                                   pessoa_religiao
@@ -1798,7 +1811,7 @@ export default {
                     , conjuge_nome
                     , conjuge_apelido
                     , conjuge_sexo
-                    , TO_CHAR(conjuge_data_nascimento, 'YYYY-MM-DD')    conjuge_nascimento
+                    , to_char(conjuge_data_nascimento, 'YYYY-MM-DD')    conjuge_nascimento
                     , conjuge_cpf
                     , conjuge_foto                                      foto_conjuge
                     , conjuge_crismada                                  conjuge_sacramento_crisma
@@ -1833,15 +1846,15 @@ export default {
                     , pessoa_complemento                                pessoa_complemento
                     , pessoa_foto_casal                                 pessoa_foto_casal
                     , pessoa_etapa_1_numero                             pessoa_etapa_1_numero
-                    , TO_CHAR(pessoa_etapa_1_data_inicio, 'YYYY-MM-DD') pessoa_etapa_1_data_inicio
+                    , to_char(pessoa_etapa_1_data_inicio, 'YYYY-MM-DD') pessoa_etapa_1_data_inicio
                     , pessoa_etapa_1_local                              pessoa_etapa_1_local
                     , pessoa_etapa_1_nucleo_sigla                       pessoa_etapa_1_nucleo_sigla
                     , pessoa_etapa_2_numero                             pessoa_etapa_2_numero
-                    , TO_CHAR(pessoa_etapa_2_data_inicio, 'YYYY-MM-DD') pessoa_etapa_2_data_inicio
+                    , to_char(pessoa_etapa_2_data_inicio, 'YYYY-MM-DD') pessoa_etapa_2_data_inicio
                     , pessoa_etapa_2_local                              pessoa_etapa_2_local
                     , pessoa_etapa_2_nucleo_sigla                       pessoa_etapa_2_nucleo_sigla
                     , pessoa_etapa_3_numero                             pessoa_etapa_3_numero
-                    , TO_CHAR(pessoa_etapa_3_data_inicio, 'YYYY-MM-DD') pessoa_etapa_3_data_inicio
+                    , to_char(pessoa_etapa_3_data_inicio, 'YYYY-MM-DD') pessoa_etapa_3_data_inicio
                     , pessoa_etapa_3_local                              pessoa_etapa_3_local
                     , pessoa_etapa_3_nucleo_sigla                       pessoa_etapa_3_nucleo_sigla
                     , pessoa_profissao                                  pessoa_profissao
@@ -1858,7 +1871,7 @@ export default {
                WHERE pessoa_gestor_id = 12
                  AND pessoa_origem_tipo_dom = 5738
                  AND ${where}`
-      const data = { query: query }
+      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -1868,131 +1881,131 @@ export default {
       }
 
       await fetch(this.API_URL + 'listByOne', requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao chamar a API: ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (Object.keys(data)?.length > 0) {
-            let dados = data[0];
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao chamar a API: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (Object.keys(data)?.length > 0) {
+              let dados = data[0];
 
-            this.registros.item = dados;
-            if (dados.pessoa_cpf?.length >= 11 && dados.pessoa_nascimento !== null) {
+              this.registros.item = dados;
+              if (dados.pessoa_cpf?.length >= 11 && dados.pessoa_nascimento !== null) {
                 this.registros.cpf_validado = true;
                 console.log('this.registros.cpf_validado', this.registros.cpf_validado);
-            }
+              }
 
-            if (dados.conjuge_cpf?.length >= 11 && dados.conjuge_nascimento !== null) {
-              this.registros.cpf_validado_conjuge = true;
-              console.log('this.registros.cpf_validado_conjuge', this.registros.cpf_validado_conjuge);
-            }
+              if (dados.conjuge_cpf?.length >= 11 && dados.conjuge_nascimento !== null) {
+                this.registros.cpf_validado_conjuge = true;
+                console.log('this.registros.cpf_validado_conjuge', this.registros.cpf_validado_conjuge);
+              }
 
-            if (dados.pessoa_etapa_1 === 'S' || dados.pessoa_etapa_2 === 'S' || dados.pessoa_etapa_3 === 'S') {
-              setTimeout(() => {
-                this.registros.item.fezECC = 'S';
+              if (dados.pessoa_etapa_1 === 'S' || dados.pessoa_etapa_2 === 'S' || dados.pessoa_etapa_3 === 'S') {
+                setTimeout(() => {
+                  this.registros.item.fezECC = 'S';
 
-                if (this.registros.item.fezECC = 'S' && this.registros.item.pessoa_perfil_equipe_indicada_id) {
-                  this.tabs[7].libera = true;
-                } else {
-                  this.tabs[7].libera = false;
+                  if (this.registros.item.fezECC = 'S' && this.registros.item.pessoa_perfil_equipe_indicada_id) {
+                    this.tabs[7].libera = true;
+                  } else {
+                    this.tabs[7].libera = false;
+                  }
+
+                  if (this.registros.item.fezECC = 'S') {
+                    this.tabs[8].libera = true;
+                  } else {
+                    this.tabs[8].libera = false;
+                  }
+
+                }, 100);
+              }
+              const mapaHabilidades = {
+                '306': 'habilidade_cantar',
+                '308': 'habilidade_tocar_violao',
+                '632': 'habilidade_falar_em_publico',
+                '633': 'habilidade_ministro_eucaristia',
+                '634': 'habilidade_servir_cafe',
+                '635': 'habilidade_desenho',
+                '636': 'habilidade_limpeza',
+                '643': 'habilidade_liturgia',
+                '647': 'habilidade_cozinhar',
+                '648': 'habilidade_informatica',
+                '649': 'habilidade_coordenar_grupos',
+                '6522': 'habilidade_eletronica',
+              };
+
+              Object.values({...mapaHabilidades}).forEach(campo => {
+                if (!this.registros.item.hasOwnProperty(campo)) {
+                  this.registros.item[campo] = null;
                 }
+              });
 
-                if (this.registros.item.fezECC = 'S') {
-                  this.tabs[8].libera = true;
-                } else {
-                  this.tabs[8].libera = false;
+              const idsPessoa = dados.pessoa_perfil_habilidade_id?.split(',').map(id => id.trim()) || [];
+              idsPessoa.forEach(id => {
+                const campo = mapaHabilidades[id];
+                if (campo) {
+                  this.registros.item[campo] = id;
                 }
+              });
 
-              }, 100);
+              const idsConjuge = dados.conjuge_perfil_habilidade_id?.split(',').map(id => id.trim()) || [];
+              idsConjuge.forEach(id => {
+                const campo = mapaHabilidades[id];
+                if (campo) {
+                  this.registros.item[`conjuge_${campo}`] = id;
+                }
+              });
+
+              const mapaEquipes = {
+                '658': 'equipe_secretaria',
+                '659': 'equipe_cozinha',
+                '660': 'equipe_compras',
+                '661': 'equipe_visitacao',
+                '662': 'equipe_acolhida',
+                '663': 'equipe_cafe_minimercado',
+                '664': 'equipe_liturgia_vigilia',
+                '665': 'equipe_ordem_limpeza',
+                '720': 'equipe_palestras',
+                '721': 'equipe_sala_canto',
+                '722': 'equipe_boa_vontade',
+              };
+
+              Object.values({...mapaEquipes}).forEach(campo => {
+                if (!this.registros.item.hasOwnProperty(campo)) {
+                  this.registros.item[campo] = null;
+                }
+              });
+
+              const idsPessoaEquipe = dados.pessoa_perfil_equipe_indicada_id?.split(',').map(id => id.trim()) || [];
+              idsPessoaEquipe.forEach(id => {
+                const campoEquipe = mapaEquipes[id];
+                if (campoEquipe) {
+                  this.registros.item[campoEquipe] = id;
+                }
+              });
+
+              const idsConjugeEquipe = dados.conjuge_perfil_equipe_indicada_id?.split(',').map(id => id.trim()) || [];
+              idsConjugeEquipe.forEach(id => {
+                const campoEquipe = mapaEquipes[id];
+                if (campoEquipe) {
+                  this.registros.item[`conjuge_${campoEquipe}`] = id;
+                }
+              });
+
+              this.setImagemInput();
+            } else {
+              this.registros.item = {
+                pessoa_nome: this.registros.pessoa_nome || dados?.nome || '',
+                pessoa_cpf: this.registros.pessoa_cpf || dados?.cpf || '',
+                pessoa_email: this.registros.pessoa_email || dados?.email || '',
+              }
             }
-            const mapaHabilidades = {
-              '306': 'habilidade_cantar',
-              '308': 'habilidade_tocar_violao',
-              '632': 'habilidade_falar_em_publico',
-              '633': 'habilidade_ministro_eucaristia',
-              '634': 'habilidade_servir_cafe',
-              '635': 'habilidade_desenho',
-              '636': 'habilidade_limpeza',
-              '643': 'habilidade_liturgia',
-              '647': 'habilidade_cozinhar',
-              '648': 'habilidade_informatica',
-              '649': 'habilidade_coordenar_grupos',
-              '6522': 'habilidade_eletronica',
-            };
-
-            Object.values({ ...mapaHabilidades }).forEach(campo => {
-              if (!this.registros.item.hasOwnProperty(campo)) {
-                this.registros.item[campo] = null;
-              }
-            });
-
-            const idsPessoa = dados.pessoa_perfil_habilidade_id?.split(',').map(id => id.trim()) || [];
-            idsPessoa.forEach(id => {
-              const campo = mapaHabilidades[id];
-              if (campo) {
-                this.registros.item[campo] = id;
-              }
-            });
-
-            const idsConjuge = dados.conjuge_perfil_habilidade_id?.split(',').map(id => id.trim()) || [];
-            idsConjuge.forEach(id => {
-              const campo = mapaHabilidades[id];
-              if (campo) {
-                this.registros.item[`conjuge_${campo}`] = id;
-              }
-            });
-
-            const mapaEquipes = {
-              '658': 'equipe_secretaria',
-              '659': 'equipe_cozinha',
-              '660': 'equipe_compras',
-              '661': 'equipe_visitacao',
-              '662': 'equipe_acolhida',
-              '663': 'equipe_cafe_minimercado',
-              '664': 'equipe_liturgia_vigilia',
-              '665': 'equipe_ordem_limpeza',
-              '720': 'equipe_palestras',
-              '721': 'equipe_sala_canto',
-              '722': 'equipe_boa_vontade',
-            };
-
-            Object.values({ ...mapaEquipes }).forEach(campo => {
-              if (!this.registros.item.hasOwnProperty(campo)) {
-                this.registros.item[campo] = null;
-              }
-            });
-
-            const idsPessoaEquipe = dados.pessoa_perfil_equipe_indicada_id?.split(',').map(id => id.trim()) || [];
-            idsPessoaEquipe.forEach(id => {
-              const campoEquipe = mapaEquipes[id];
-              if (campoEquipe) {
-                this.registros.item[campoEquipe] = id;
-              }
-            });
-
-            const idsConjugeEquipe = dados.conjuge_perfil_equipe_indicada_id?.split(',').map(id => id.trim()) || [];
-            idsConjugeEquipe.forEach(id => {
-              const campoEquipe = mapaEquipes[id];
-              if (campoEquipe) {
-                this.registros.item[`conjuge_${campoEquipe}`] = id;
-              }
-            });
-
-            this.setImagemInput();
-          } else {
-            this.registros.item = {
-              pessoa_nome: this.registros.pessoa_nome || dados?.nome || '',
-              pessoa_cpf: this.registros.pessoa_cpf || dados?.cpf || '',
-              pessoa_email: this.registros.pessoa_email || dados?.email || '',
-            }
-          }
-        })
-        .catch(error => {
-          console.log('Erro na chamada à API:', error);
-          return;
-        })
+          })
+          .catch(error => {
+            console.log('Erro na chamada à API:', error);
+            return;
+          })
     },
     async validarPessoaImportacao() {
       const rawUser = sessionStorage.getItem('user');
@@ -2019,7 +2032,7 @@ export default {
         FROM sge_pessoa_importacao
         WHERE ${where}`;
 
-      const data = { query: query }
+      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -2029,22 +2042,22 @@ export default {
       }
 
       await fetch(this.API_URL + 'listByOne', requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao chamar a API: ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (Object.keys(data).length > 0) {
-            let dados = data[0];
-            this.registros.item.id = dados.id;
-          }
-        })
-        .catch(error => {
-          console.log('Erro na chamada à API:', error);
-          return;
-        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao chamar a API: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (Object.keys(data).length > 0) {
+              let dados = data[0];
+              this.registros.item.id = dados.id;
+            }
+          })
+          .catch(error => {
+            console.log('Erro na chamada à API:', error);
+            return;
+          })
     },
     async carregarDominio() {
       await dominioService.carregar();
@@ -2124,7 +2137,7 @@ export default {
     metaDadosImage(event) {
       let document = event;
 
-      let { name: fileName, type: baseType } = document || {};
+      let {name: fileName, type: baseType} = document || {};
       let extension = fileName.split('.').pop();
       let chaveUUID = this.createUUID();
       let nameUUID = chaveUUID + "." + extension;
@@ -2244,15 +2257,15 @@ export default {
           ctx.drawImage(img, 0, 0)
 
           canvas.toBlob(
-            (blob) => {
-              resolve(
-                new File([blob], this.trocarExtensao(file.name, 'jpg'), {
-                  type: 'image/jpeg'
-                })
-              )
-            },
-            'image/jpeg',
-            0.9
+              (blob) => {
+                resolve(
+                    new File([blob], this.trocarExtensao(file.name, 'jpg'), {
+                      type: 'image/jpeg'
+                    })
+                )
+              },
+              'image/jpeg',
+              0.9
           )
         }
 
@@ -2266,25 +2279,25 @@ export default {
     // AUXILIARES
     async getCep() {
       await fetch(`https://viacep.com.br/ws/${this.registros.item.pessoa_cep}/json/`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.erro) {
-            window.alert('CEP não encontrado. Verifique se digitou corretamente.');
-            return;
-          }
-          let { logradouro, localidade: cidade, bairro, cep, uf } = data;
+          .then(response => response.json())
+          .then(data => {
+            if (data.erro) {
+              window.alert('CEP não encontrado. Verifique se digitou corretamente.');
+              return;
+            }
+            let {logradouro, localidade: cidade, bairro, cep, uf} = data;
 
-          this.registros.item.pessoa_endereco = logradouro;
-          this.registros.item.pessoa_cidade = cidade || 'Brasilia';
-          this.registros.item.pessoa_bairro = bairro;
-          this.registros.item.pessoa_cep = cep;
-          this.registros.item.pessoa_uf = uf;
+            this.registros.item.pessoa_endereco = logradouro;
+            this.registros.item.pessoa_cidade = cidade || 'Brasilia';
+            this.registros.item.pessoa_bairro = bairro;
+            this.registros.item.pessoa_cep = cep;
+            this.registros.item.pessoa_uf = uf;
 
-          this.camposBloqueados = true;
-        })
-        .catch(err => {
-          console.error('Erro ao buscar CEP:', err);
-        });
+            this.camposBloqueados = true;
+          })
+          .catch(err => {
+            console.error('Erro ao buscar CEP:', err);
+          });
     },
     houveAlteracoes() {
       return JSON.stringify(this.registros.item) !== JSON.stringify(this.registrosOriginais);
@@ -2306,7 +2319,7 @@ export default {
       if (idx > 0) {
         this.activeTab = this.tabsLiberadas[idx - 1].id;
         if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({top: 0, behavior: 'smooth'});
         }
       }
     },
@@ -2335,7 +2348,7 @@ export default {
         this.activeTab = tabsLiberadas[nextIndex].id;
         // rolar para o topo ao mudar de aba (importante em mobile)
         if (typeof window !== 'undefined') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          window.scrollTo({top: 0, behavior: 'smooth'});
         }
       }
     },
@@ -2344,26 +2357,26 @@ export default {
       const camposObrigatorios = [];
 
       const campos = [
-        { key: 'pessoa_nome', label: 'Nome Completo' },
+        {key: 'pessoa_nome', label: 'Nome Completo'},
         {
           key: 'pessoa_nascimento',
           label: 'Data de Nascimento',
-        //   validacaoExtra: (valor) => {
-        //     if (valor && !this.validarDataNascimento(valor)) {
-        //       return 'A data de nascimento informada não é válida.';
-        //     }
-        //     return null;
-        //   }
+          //   validacaoExtra: (valor) => {
+          //     if (valor && !this.validarDataNascimento(valor)) {
+          //       return 'A data de nascimento informada não é válida.';
+          //     }
+          //     return null;
+          //   }
         },
         {
           key: 'pessoa_cpf',
           label: 'CPF',
-        //   validacaoExtra: (valor) => {
-        //     if (valor && !this.validarCpf(valor)) {
-        //       return 'O CPF informado não é válido. Verifique os números.';
-        //     }
-        //     return null;
-        //   }
+          //   validacaoExtra: (valor) => {
+          //     if (valor && !this.validarCpf(valor)) {
+          //       return 'O CPF informado não é válido. Verifique os números.';
+          //     }
+          //     return null;
+          //   }
         },
         {
           key: 'pessoa_celular',
@@ -2385,8 +2398,8 @@ export default {
             return null;
           }
         },
-        { key: 'pessoa_sexo', label: 'Sexo' },
-        { key: 'pessoa_estado_civil', label: 'Estado Civil' },
+        {key: 'pessoa_sexo', label: 'Sexo'},
+        {key: 'pessoa_estado_civil', label: 'Estado Civil'},
         {
           key: 'conjuge_nome',
           label: 'Nome do Cônjuge',
@@ -2396,29 +2409,29 @@ export default {
           key: 'conjuge_nascimento',
           label: 'Data de Nascimento do Cônjuge',
           requiredIf: () => this.comConjuge.includes(this.registros.item.pessoa_estado_civil),
-        //   validacaoExtra: (valor) => {
-        //     if (valor && !this.validarDataNascimento(valor)) {
-        //       return 'A data de nascimento informada não é válida.';
-        //     }
-        //     return null;
-        //   }
+          //   validacaoExtra: (valor) => {
+          //     if (valor && !this.validarDataNascimento(valor)) {
+          //       return 'A data de nascimento informada não é válida.';
+          //     }
+          //     return null;
+          //   }
         },
         {
           key: 'conjuge_cpf',
           label: 'CPF do Cônjuge',
           requiredIf: () => this.comConjuge.includes(this.registros.item.pessoa_estado_civil),
-        //   validacaoExtra: (valor) => {
-        //     if (valor && !this.validarCpf(valor)) {
-        //       return 'O CPF do cônjuge não é válido.';
-        //     }
-        //     // Validação cruzada: CPF da pessoa e do cônjuge não podem ser iguais
-        //     const cpfPessoa = (this.registros.item.pessoa_cpf || '').replace(/\D/g, '');
-        //     const cpfConjuge = (valor || '').replace(/\D/g, '');
-        //     if (cpfPessoa && cpfConjuge && cpfPessoa === cpfConjuge) {
-        //       return 'O CPF do cônjuge não pode ser igual ao seu CPF.';
-        //     }
-        //     return null;
-        //   }
+          //   validacaoExtra: (valor) => {
+          //     if (valor && !this.validarCpf(valor)) {
+          //       return 'O CPF do cônjuge não é válido.';
+          //     }
+          //     // Validação cruzada: CPF da pessoa e do cônjuge não podem ser iguais
+          //     const cpfPessoa = (this.registros.item.pessoa_cpf || '').replace(/\D/g, '');
+          //     const cpfConjuge = (valor || '').replace(/\D/g, '');
+          //     if (cpfPessoa && cpfConjuge && cpfPessoa === cpfConjuge) {
+          //       return 'O CPF do cônjuge não pode ser igual ao seu CPF.';
+          //     }
+          //     return null;
+          //   }
         },
         {
           key: 'conjuge_celular',
@@ -2478,11 +2491,11 @@ export default {
           // Focar no primeiro campo com erro (acessibilidade)
           this.$nextTick(() => {
             const primeiroErro = document.querySelector(
-              '[aria-invalid="true"], .text-danger ~ input, .text-danger ~ select'
+                '[aria-invalid="true"], .text-danger ~ input, .text-danger ~ select'
             );
             if (primeiroErro && typeof primeiroErro.focus === 'function') {
               primeiroErro.focus();
-              primeiroErro.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              primeiroErro.scrollIntoView({behavior: 'smooth', block: 'center'});
             }
           });
         }
@@ -2534,7 +2547,7 @@ export default {
       sessionStorage.setItem('formularioFinalizado', 'true');
       this.$router.replace('/end');
     },
-    receberRegistros({ etapas, dados }) {
+    receberRegistros({etapas, dados}) {
       Object.keys(dados).forEach(key => {
         this.registros[key] = dados[key];
       });
@@ -2554,11 +2567,11 @@ export default {
         },
         body: "grant_type=client_credentials",
       })
-        .then((response) => response.json())
-        .then((data) => {
-          this.token = data;
-        })
-        .catch((err) => console.error(err));
+          .then((response) => response.json())
+          .then((data) => {
+            this.token = data;
+          })
+          .catch((err) => console.error(err));
     },
     async getCpfDetails(item = false, conjuge = false) {
       let cpf;
@@ -2583,14 +2596,14 @@ export default {
 
       try {
         const res = await fetch(
-          `https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v2/cpf/${cpf.replace(/\D/g, '')}`,
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              Authorization: `Bearer ${this.token.access_token}`,
-            },
-          }
+            `https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v2/cpf/${cpf.replace(/\D/g, '')}`,
+            {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                Authorization: `Bearer ${this.token.access_token}`,
+              },
+            }
         );
 
         if (!res.ok) {
