@@ -11,12 +11,12 @@
           <form @submit.prevent="login()">
             <div class="mb-3">
               <label class="form-label text-dark" for="nome">Nome:</label>
-              <input type="text" id="nome" class="form-control" v-model="registros.nome" required />
+              <input type="text" id="nome" class="form-control" v-model="registros.nome" required/>
             </div>
             <div class="mb-3">
               <label class="form-label text-dark" for="cpf">CPF:</label>
               <input type="text" id="cpf" class="form-control" v-model="registros.cpf" v-mask="'###.###.###-##'"
-                required />
+                     required/>
             </div>
             <div class="text-center">
               <button type="submit" class="btn btn-primary">Entrar</button>
@@ -30,13 +30,13 @@
           <div class="mb-3">
             <div class="input-group">
               <input type="text" class="form-control" v-model="registros.celular" v-mask="'(##)#####-####'"
-                placeholder="Login com celular: (61)99999-9999" />
+                     placeholder="Login com celular: (61)99999-9999"/>
               <button class="btn btn-primary" type="button" @click="sendCode">Enviar código</button>
               <small class="form-text text-muted">Informe seu número de celular com DDD no formato: (61)
                 99999-9999.</small>
             </div>
             <div v-if="confirmationResult" class="input-group" style="top: 6px;">
-              <input type="text" class="form-control" v-model="verificationCode" placeholder="Código" />
+              <input type="text" class="form-control" v-model="verificationCode" placeholder="Código"/>
               <button class="btn btn-primary" @click="confirmCode">Confirmar código</button>
             </div>
             <div id="recaptcha-container" class="mt-2"></div>
@@ -51,19 +51,25 @@
           </div>
         </div>
       </div>
-      <LoadingSpinner :show="loading" />
+      <LoadingSpinner :show="loading"/>
     </div>
   </div>
 </template>
 
 <script>
-import { auth } from "@/firebaseConfig";
-import { RecaptchaVerifier, signInWithPhoneNumber, sendSignInLinkToEmail, signInWithEmailLink, isSignInWithEmailLink } from "firebase/auth";
+import {auth} from "@/firebaseConfig";
+import {
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  sendSignInLinkToEmail,
+  signInWithEmailLink,
+  isSignInWithEmailLink
+} from "firebase/auth";
 import LoadingSpinner from '@/views/LoadingSpinner.vue';
 
 export default {
   name: 'Home',
-  components: { LoadingSpinner },
+  components: {LoadingSpinner},
   data() {
     return {
       API_URL: 'https://app.seg.inf.br/sge/api/tela/listByOne',
@@ -114,11 +120,11 @@ export default {
         const base64Url = token.split(".")[1];
         const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
         const jsonPayload = decodeURIComponent(
-          window
-            .atob(base64)
-            .split("")
-            .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-            .join("")
+            window
+                .atob(base64)
+                .split("")
+                .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+                .join("")
         );
         return JSON.parse(jsonPayload);
       } catch (error) {
@@ -147,16 +153,16 @@ export default {
     async verificarEmailExistente() {
       let query;
       query = `
-          SELECT pessoa_id     id
-               , pessoa_email  pessoa_email
-               , conjuge_email conjuge_email
-          FROM bi.td_pessoa
-          WHERE ( (fc_sem_acentos_maiusculos(pessoa_email) LIKE
-                  ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%'))
-            OR (fc_sem_acentos_maiusculos(conjuge_email) LIKE
-                ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%')))`;
+        SELECT pessoa_id     id
+             , pessoa_email  pessoa_email
+             , conjuge_email conjuge_email
+        FROM bi.td_pessoa
+        WHERE ((fc_sem_acentos_maiusculos(pessoa_email) LIKE
+                ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%'))
+          OR (fc_sem_acentos_maiusculos(conjuge_email) LIKE
+              ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%')))`;
 
-      const data = { query: query }
+      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -166,21 +172,21 @@ export default {
       }
 
       await fetch(this.API_URL, requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao chamar a API: ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(data => {
-          if (Object.keys(data).length > 0) {
-            this.login();
-          }
-        })
-        .catch(error => {
-          console.log('Erro na chamada à API:', error);
-          return window.alert('Erro: ', error);
-        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao chamar a API: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(data => {
+            if (Object.keys(data).length > 0) {
+              this.login();
+            }
+          })
+          .catch(error => {
+            console.log('Erro na chamada à API:', error);
+            return window.alert('Erro: ', error);
+          })
     },
     initGoogleSignIn() {
       window?.google.accounts.id.initialize({
@@ -190,8 +196,8 @@ export default {
         },
       });
       window.google.accounts.id.renderButton(
-        document.getElementById("buttonDiv"),
-        { theme: "outline", size: "large" }
+          document.getElementById("buttonDiv"),
+          {theme: "outline", size: "large"}
       );
       window.google.accounts.id.prompt();
 
@@ -233,12 +239,12 @@ export default {
       }
 
       query = `SELECT *
-                 FROM bi.td_pessoa
-                 WHERE pessoa_gestor_id = 12
-                   AND pessoa_origem_tipo_dom = 5738
-                   AND ${where}`
+               FROM bi.td_pessoa
+               WHERE pessoa_gestor_id = 12
+                 AND pessoa_origem_tipo_dom = 5738
+                 AND ${where}`
 
-      const data = { query: query }
+      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -248,26 +254,26 @@ export default {
       }
 
       await fetch(this.API_URL, requestOptions)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Erro ao chamar a API: ' + response.statusText);
-          }
-          return response.json();
-        })
-        .then(async data => {
-          if (Object.keys(data).length > 0) {
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Erro ao chamar a API: ' + response.statusText);
+            }
+            return response.json();
+          })
+          .then(async data => {
+            if (Object.keys(data).length > 0) {
+              this.loading = false;
+              return this.$router.push('/form');
+            } else {
+              this.loading = false;
+              return this.$router.push('/form');
+            }
+          })
+          .catch(error => {
+            console.log('Erro na chamada à API:', error);
             this.loading = false;
-            return this.$router.push('/form');
-          } else {
-            this.loading = false;
-            return this.$router.push('/form');
-          }
-        })
-        .catch(error => {
-          console.log('Erro na chamada à API:', error);
-          this.loading = false;
-          return window.alert('Erro: ', error);
-        })
+            return window.alert('Erro: ', error);
+          })
     },
 
     // Login no sistema pelo código enviado ao celular, validando se o registro existe pela coluna celular.
@@ -287,7 +293,7 @@ export default {
         celular = this.registros.celular.replace(/[^a-z0-9]/gi, '');
       }
 
-     
+
       try {
         const result = await signInWithPhoneNumber(auth, `+55${celular}`, this.recaptchaVerifier);
         this.confirmationResult = result;
@@ -330,17 +336,17 @@ export default {
       };
 
       sendSignInLinkToEmail(auth, this.email, actionCodeSettings)
-        .then((res) => {
-          this.loading = false;
-          window.localStorage.setItem('emailForSignIn', this.email);
-          window.alert('Link enviado para o e-mail: ' + this.email);
-        })
-        .catch((error) => {
-          this.loading = false;
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          window.alert('Erro ao enviar link para e-mail: ' + errorMessage);
-        });
+          .then((res) => {
+            this.loading = false;
+            window.localStorage.setItem('emailForSignIn', this.email);
+            window.alert('Link enviado para o e-mail: ' + this.email);
+          })
+          .catch((error) => {
+            this.loading = false;
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            window.alert('Erro ao enviar link para e-mail: ' + errorMessage);
+          });
     },
     async checkSignInLink() {
       this.loading = true;

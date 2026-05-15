@@ -7,6 +7,7 @@ import {
 import App from "./App.vue";
 import Home from "./views/Home.vue";
 import Form from "./views/Form2.vue";
+// import Form from "./views/Form.vue";
 import EndScreen from "./views/EndScreen.vue";
 import VueTheMask from 'vue-the-mask';
 
