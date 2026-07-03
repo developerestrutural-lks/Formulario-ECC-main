@@ -163,7 +163,8 @@
             <label class="form-label text-dark text-start" for="sexo">
               Sexo:<label style="color:red" aria-label="campo obrigatório">*</label>
             </label>
-            <multiselect v-model="registros.item.pessoa_sexo" :options="sexo" placeholder="Selecione ou pesquise..."
+            <multiselect v-model="registros.item.pessoa_sexo" :options="sexoDisponivel('conjuge_sexo')"
+                         placeholder="Selecione ou pesquise..."
                          :searchable="true" :close-on-select="true" id="sexo" :show-labels="false" :taggable="true"
                          @tag="sexo.push($event); registros.item.pessoa_sexo = $event"/>
             <div v-if="erros.pessoa_sexo" class="text-danger mt-1" role="alert">
@@ -305,7 +306,7 @@
               <label class="form-label text-dark text-start" for="conjuge_sexo">
                 Sexo:<label style="color:red" aria-label="campo obrigatório">*</label>
               </label>
-              <multiselect v-model="registros.item.conjuge_sexo" :options="sexo"
+              <multiselect v-model="registros.item.conjuge_sexo" :options="sexoDisponivel('pessoa_sexo')"
                            placeholder="Selecione ou pesquise..." :searchable="true" :close-on-select="true"
                            id="conjuge_sexo" :show-labels="false" :taggable="true"
                            @tag="sexo.push($event); registros.item.conjuge_sexo = $event"/>
@@ -1251,6 +1252,7 @@ export default {
     };
   },
   created() {
+    console.log('creted')
     this.carregarDominio();
     this.listarDados();
     this.getToken();
@@ -1352,6 +1354,10 @@ export default {
     },
   },
   methods: {
+    sexoDisponivel(campoExcluir) {
+      return this.sexo.filter(s => s !== this.registros.item[campoExcluir]);
+    },
+
     // ====== VALIDAÇÕES AUXILIARES ======
     validarFormatoEmail(email) {
       if (!email) return false;
@@ -1359,7 +1365,6 @@ export default {
       const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
       return regex.test(email.trim());
     },
-
     validarCpf(cpf) {
       if (!cpf) return false;
       const numeros = cpf.replace(/\D/g, '');
@@ -1388,14 +1393,12 @@ export default {
 
       return true;
     },
-
     validarCelular(celular) {
       if (!celular) return false;
       const numeros = celular.replace(/\D/g, '');
       // 11 dígitos (DDD + 9 dígitos)
       return numeros.length === 11;
     },
-
     validarDataNascimento(data) {
       if (!data) return false;
       const dt = new Date(data);
@@ -1464,8 +1467,7 @@ export default {
                   v_pessoas sge_pessoa_importacao%rowtype;
               BEGIN
                   v_pessoas.id := NVL(to_number('${this.registros.item?.id ?? ''}'), sq_sge_pessoa_importacao.nextval);
-                  v_pessoas.origem_id := to_number('${this.registros.item?.origem_id ?? ''}');
-                  v_pessoas.origem_tipo_dom := to_number(5738);
+                  v_pessoas.pessoa_fks_id := to_number('${this.registros.item?.pessoa_fks_id ?? ''}');
                   v_pessoas.ativo := 'S';
                   v_pessoas.nome := UPPER(TRIM('${this.registros.item?.pessoa_nome ?? ''}'));
                   v_pessoas.conjuge_nome := UPPER(TRIM('${this.registros.item?.conjuge_nome ?? ''}'));
@@ -1791,6 +1793,7 @@ export default {
 
       query = `SELECT pessoa_id                                         origem_id
                     , pessoa_nome                                       pessoa_nome
+                    , pessoa_fks_id
                     , pessoa_apelido                                    pessoa_apelido
                     , pessoa_logradouro                                 pessoa_endereco
                     , pessoa_cep                                        pessoa_cep
