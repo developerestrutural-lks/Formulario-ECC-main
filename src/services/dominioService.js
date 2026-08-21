@@ -6,21 +6,8 @@ const dominios = {
 }
 
 async function carregar() {
-    let query = `SELECT *
-                FROM sge_dominio
-                WHERE entidade_id IN (0, 12)
-                ORDER BY dominio, nome, nvl(sigla, nome)`;
     try {
-        const queryPayload = { query: query }
-        const response = await axios.post(
-            'https://app.seg.inf.br/sge/api/tela/listByOne',
-            queryPayload,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        const response = await axios.get('https://app.seg.inf.br/sge/api/ecc/dominio')
 
         dominios.lista = response.data;
         dominios.carregado = true;
@@ -30,7 +17,7 @@ async function carregar() {
 }
 
 function getPorTipo(tipo) {
-    return dominios.lista.filter(d => d.dominio === tipo).map(d => d.nome);
+    return dominios.lista.filter(d => d.DOMINIO === tipo).map(d => d.NOME);
 }
 
 function getEstadoCivil() {

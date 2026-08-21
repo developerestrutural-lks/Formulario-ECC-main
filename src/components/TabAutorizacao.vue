@@ -1,42 +1,47 @@
 <template>
   <div>
-    <label class="form-label text-dark mb-3">Impressão no Quadrante:</label>
+    <label class="form-label text-dark text-start fw-bold">Impressão no Quadrante:</label>
+    <small class="form-text text-muted d-block mb-3">
+      Marque quais informações você autoriza que apareçam no material impresso de divulgação.
+    </small>
 
     <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="imprimirEmail"
-             v-model="registros.item.pessoa_email_autorizado" true-value="S" false-value="N"/>
-      <label class="form-check-label text-dark" for="imprimirEmail">Autorizo Imprimir Email</label>
+      <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_email_autorizado"
+             id="imprimirEmail" true-value="S" false-value="N"/>
+      <label class="form-check-label text-dark text-start" for="imprimirEmail">Autorizo Imprimir Email</label>
     </div>
 
     <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="imprimirCelular"
-             v-model="registros.item.pessoa_celular_autorizado" true-value="S" false-value="N"/>
-      <label class="form-check-label text-dark" for="imprimirCelular">Autorizo Imprimir Celular</label>
+      <input class="form-check-input" type="checkbox" v-model="registros.item.pessoa_celular_autorizado"
+             id="imprimirCelular" true-value="S" false-value="N"/>
+      <label class="form-check-label text-dark text-start" for="imprimirCelular">Autorizo Imprimir Celular</label>
     </div>
 
-    <div class="form-check mb-3">
-      <input class="form-check-input" type="checkbox" id="imprimirTelefoneFixo"
-             v-model="registros.item.tel_residencial_autorizado" true-value="S" false-value="N"/>
-      <label class="form-check-label text-dark" for="imprimirTelefoneFixo">Autorizo Imprimir Telefone Fixo</label>
-    </div>
-
-    <template v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="imprimirEmailConjuge"
-               v-model="registros.item.conjuge_email_autorizado" true-value="S" false-value="N"/>
-        <label class="form-check-label text-dark" for="imprimirEmailConjuge">
-          Autorizo Imprimir Email Cônjuge
+    <div>
+      <div class="form-check mb-3" v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
+        <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_email_autorizado"
+               id="imprimirEmailConjuge" true-value="S" false-value="N"/>
+        <label class="form-check-label text-dark text-start" for="imprimirEmailConjuge">
+          Autorizo Imprimir Email do Cônjuge
         </label>
       </div>
 
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="imprimirCelularConjuge"
-               v-model="registros.item.conjuge_celular_autorizado" true-value="S" false-value="N"/>
-        <label class="form-check-label text-dark" for="imprimirCelularConjuge">
-          Autorizo Imprimir Celular Cônjuge
+      <div class="form-check mb-3" v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
+        <input class="form-check-input" type="checkbox" v-model="registros.item.conjuge_celular_autorizado"
+               id="imprimirCelularConjuge" true-value="S" false-value="N"/>
+        <label class="form-check-label text-dark text-start" for="imprimirCelularConjuge">
+          Autorizo Imprimir Celular do Cônjuge
         </label>
       </div>
-    </template>
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" v-model="registros.item.tel_residencial_autorizado"
+             id="imprimirTelefoneFixo" true-value="S" false-value="N"/>
+      <label class="form-check-label text-dark text-start" for="imprimirTelefoneFixo">
+        Autorizo Imprimir Telefone Fixo
+      </label>
+    </div>
   </div>
 </template>
 

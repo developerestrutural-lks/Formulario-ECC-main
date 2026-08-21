@@ -6,20 +6,8 @@ const paroquias = {
 }
 
 async function carregar() {
-    let query = `SELECT id, nome, sigla
-                 FROM sge_paroquia
-                 ORDER BY nome`;
     try {
-        const queryPayload = {query: query}
-        const response = await axios.post(
-            'https://app.seg.inf.br/sge/api/tela/listByOne',
-            queryPayload,
-            {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }
-        )
+        const response = await axios.get('https://app.seg.inf.br/sge/api/ecc/paroquia')
 
         paroquias.lista = response.data;
         paroquias.carregado = true;
@@ -29,7 +17,7 @@ async function carregar() {
 }
 
 function getParoquias() {
-    return paroquias.lista.map(item => item.nome);
+    return paroquias.lista.map(item => item.NOME);
 }
 
 function init() {

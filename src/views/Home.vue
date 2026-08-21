@@ -66,13 +66,14 @@ import {
   isSignInWithEmailLink
 } from "firebase/auth";
 import LoadingSpinner from '@/views/LoadingSpinner.vue';
+import erroService from '@/services/erroService';
 
 export default {
   name: 'Home',
   components: {LoadingSpinner},
   data() {
     return {
-      API_URL: 'https://app.seg.inf.br/sge/api/tela/listByOne',
+      ECC_API_URL: 'https://app.seg.inf.br/sge/api/ecc/pessoa/',
       CLIENT_ID: "227598083779-rbngiccnj6untte4sueuc6rblk7gko58.apps.googleusercontent.com",
       accessToken: null,
       userEmail: null,
@@ -109,7 +110,11 @@ export default {
     sessionStorage.removeItem('dados');
     sessionStorage.removeItem('celular');
     sessionStorage.removeItem('email');
+
     localStorage.removeItem('emailForSignIn');
+    localStorage.removeItem('dados');
+    localStorage.removeItem('celular');
+    localStorage.removeItem('email');
     this.registros.item = {};
     this.loading = false;
   },
@@ -151,40 +156,29 @@ export default {
 
     // Validação do Gmail e caso validado faz login no sistema com o email.
     async verificarEmailExistente() {
-      let query;
-      query = `
-        SELECT pessoa_id     id
-             , pessoa_email  pessoa_email
-             , conjuge_email conjuge_email
-        FROM bi.td_pessoa
-        WHERE ((fc_sem_acentos_maiusculos(pessoa_email) LIKE
-                ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%'))
-          OR (fc_sem_acentos_maiusculos(conjuge_email) LIKE
-              ('%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%')))`;
-
-      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({email: this.registros.email})
       }
 
-      await fetch(this.API_URL, requestOptions)
-          .then(response => {
+      await fetch(this.ECC_API_URL + 'buscar', requestOptions)
+          .then(async response => {
             if (!response.ok) {
-              throw new Error('Erro ao chamar a API: ' + response.statusText);
+              throw new Error(await erroService.mensagemDaResposta(response));
             }
-            return response.json();
-          })
-          .then(data => {
-            if (Object.keys(data).length > 0) {
-              this.login();
-            }
+            return this.login();
           })
           .catch(error => {
             console.log('Erro na chamada à API:', error);
+            erroService.registrarErro({
+              erro: 'Erro ao verificar email existente: ' + error,
+              nome: this.registros.nome,
+              cpf: this.registros.cpf,
+              email: this.registros.email
+            });
             return window.alert('Erro: ', error);
           })
     },
@@ -214,64 +208,40 @@ export default {
       });
       sessionStorage.setItem('user', dados);
 
-      let query;
-      let where;
-
+      let criterio;
       if (this.registros.email) {
-        where = `( fc_sem_acentos_maiusculos(pessoa_email) LIKE
-              '%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%'
-               OR  fc_sem_acentos_maiusculos(conjuge_email) LIKE
-              '%' || fc_sem_acentos_maiusculos('${this.registros.email}') || '%'  )`;
+        criterio = {email: this.registros.email};
       } else if (this.registros.celular) {
-        let celular = this.registros.celular.replace(/[^a-z0-9]/gi, '');
-        where = `(fc_sem_acentos_maiusculos(pessoa_celular) LIKE
-              '%' || fc_sem_acentos_maiusculos('${celular}') || '%'
-               OR fc_sem_acentos_maiusculos(conjuge_celular) LIKE
-              '%' || fc_sem_acentos_maiusculos('${celular}') || '%')`
+        criterio = {celular: this.registros.celular.replace(/[^a-z0-9]/gi, '')};
       } else {
-        where = `(
-        ( fc_sem_acentos_maiusculos(pessoa_nome) = fc_sem_acentos_maiusculos('${this.registros.nome}')
-        AND fc_sem_acentos_maiusculos(pessoa_cpf) = fc_sem_acentos_maiusculos('${this.registros.cpf}') ) 
-          OR
-        ( fc_sem_acentos_maiusculos(conjuge_nome) = fc_sem_acentos_maiusculos('${this.registros.nome}')
-        AND fc_sem_acentos_maiusculos(conjuge_cpf) = fc_sem_acentos_maiusculos('${this.registros.cpf}') )
-        )`;
+        criterio = {nome: this.registros.nome, cpf: this.registros.cpf};
       }
 
-      query = `SELECT *
-               FROM bi.td_pessoa
-               WHERE pessoa_gestor_id = 12
-                 AND pessoa_origem_tipo_dom = 5738
-                 AND ${where}`
-
-      const data = {query: query}
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(criterio)
       }
 
-      await fetch(this.API_URL, requestOptions)
-          .then(response => {
+      await fetch(this.ECC_API_URL + 'buscar', requestOptions)
+          .then(async response => {
             if (!response.ok) {
-              throw new Error('Erro ao chamar a API: ' + response.statusText);
+              throw new Error(await erroService.mensagemDaResposta(response));
             }
-            return response.json();
-          })
-          .then(async data => {
-            if (Object.keys(data).length > 0) {
-              this.loading = false;
-              return this.$router.push('/form');
-            } else {
-              this.loading = false;
-              return this.$router.push('/form');
-            }
+            this.loading = false;
+            return this.$router.push('/form');
           })
           .catch(error => {
             console.log('Erro na chamada à API:', error);
             this.loading = false;
+            erroService.registrarErro({
+              erro: 'Erro ao fazer login: ' + error,
+              nome: this.registros.nome,
+              cpf: this.registros.cpf,
+              email: this.registros.email
+            });
             return window.alert('Erro: ', error);
           })
     },
@@ -361,7 +331,7 @@ export default {
             this.loading = false;
             this.registros.email = email;
             sessionStorage.setItem('email', this.registros.email);
-            this.login();
+            await this.login();
           }
         } catch (error) {
           console.error('Erro ao fazer login:', error);

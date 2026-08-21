@@ -1,44 +1,28 @@
 <template>
   <div>
-    <!-- Habilidades da Pessoa -->
-    <label class="form-label text-dark mb-3">
-      Selecione as habilidades que você se enquadra — {{ registros.item.pessoa_nome }}:
-    </label>
+    <ChecklistCard :items="habilidadesPessoa" :registros-item="registros.item">
+      <template #label>
+        <label class="form-label text-dark mb-3">
+          Selecione as habilidades que você se enquadra — {{ registros.item.pessoa_nome }}:
+        </label>
+      </template>
+    </ChecklistCard>
 
-    <div class="form-check mb-3" v-for="hab in habilidadesPessoa" :key="hab.id">
-      <input
-          class="form-check-input"
-          type="checkbox"
-          :id="hab.campo"
-          v-model="registros.item[hab.campo]"
-          :true-value="hab.valor"
-          :false-value="null"
-      />
-      <label class="form-check-label text-dark" :for="hab.campo">{{ hab.label }}</label>
-    </div>
-
-    <!-- Habilidades do Cônjuge -->
     <template v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
-      <label class="form-label text-dark mt-4 mb-3">
-        Selecione as habilidades que se enquadra (CÔNJUGE) — {{ registros.item.conjuge_nome }}:
-      </label>
-
-      <div class="form-check mb-3" v-for="hab in habilidadesConjuge" :key="hab.id">
-        <input
-            class="form-check-input"
-            type="checkbox"
-            :id="hab.campo"
-            v-model="registros.item[hab.campo]"
-            :true-value="hab.valor"
-            :false-value="null"
-        />
-        <label class="form-check-label text-dark" :for="hab.campo">{{ hab.label }}</label>
-      </div>
+      <ChecklistCard :items="habilidadesConjuge" :registros-item="registros.item">
+        <template #label>
+          <label class="form-label text-dark mt-4 mb-3">
+            Selecione as habilidades que se enquadra (CÔNJUGE) — {{ registros.item.conjuge_nome }}:
+          </label>
+        </template>
+      </ChecklistCard>
     </template>
   </div>
 </template>
 
 <script>
+import ChecklistCard from './ChecklistCard.vue';
+
 const HABILIDADES = [
   {valor: '306', label: 'Cantar', campo: 'habilidade_cantar'},
   {valor: '647', label: 'Cozinhar', campo: 'habilidade_cozinhar'},
@@ -56,6 +40,7 @@ const HABILIDADES = [
 
 export default {
   name: 'TabHabilidades',
+  components: {ChecklistCard},
   props: {
     registros: {type: Object, required: true},
     comConjuge: {type: Array, required: true},

@@ -1,27 +1,21 @@
 <template>
   <div>
-    <label class="form-label text-dark mb-3">
-      Selecione as equipes que você(s) se enquadra(m) — {{ registros.item.pessoa_nome }}
-      <span v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
-        e {{ registros.item.conjuge_nome }}
-      </span>:
-    </label>
-
-    <div class="form-check mb-3" v-for="equipe in equipes" :key="equipe.campo">
-      <input
-          class="form-check-input"
-          type="checkbox"
-          :id="equipe.campo"
-          v-model="registros.item[equipe.campo]"
-          :true-value="equipe.valor"
-          :false-value="null"
-      />
-      <label class="form-check-label text-dark" :for="equipe.campo">{{ equipe.label }}</label>
-    </div>
+    <ChecklistCard :items="equipes" :registros-item="registros.item">
+      <template #label>
+        <label class="form-label text-dark mb-3">
+          Selecione as equipes que você(s) se enquadra(m) — {{ registros.item.pessoa_nome }}
+          <span v-if="comConjuge.includes(registros.item.pessoa_estado_civil)">
+            e {{ registros.item.conjuge_nome }}
+          </span>:
+        </label>
+      </template>
+    </ChecklistCard>
   </div>
 </template>
 
 <script>
+import ChecklistCard from './ChecklistCard.vue';
+
 const EQUIPES = [
   {valor: '658', label: 'Secretaria', campo: 'equipe_secretaria'},
   {valor: '659', label: 'Cozinha', campo: 'equipe_cozinha'},
@@ -38,6 +32,7 @@ const EQUIPES = [
 
 export default {
   name: 'TabEquipes',
+  components: {ChecklistCard},
   props: {
     registros: {type: Object, required: true},
     comConjuge: {type: Array, required: true},
