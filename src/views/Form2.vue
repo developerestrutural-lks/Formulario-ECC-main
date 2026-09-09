@@ -346,11 +346,7 @@ export default {
           this.getCep();
         }, 250);
       } else if (cepSemMascara.length === 0) {
-        this.registros.item.pessoa_endereco = '';
-        this.registros.item.pessoa_bairro = '';
-        this.registros.item.pessoa_cidade = '';
-        this.registros.item.pessoa_uf = '';
-        this.camposBloqueados = false;
+        this.limparEndereco(false);
       }
     },
     'registros.item.pessoa_etapa_1'(val) {
@@ -1057,11 +1053,25 @@ export default {
     },
 
     // AUXILIARES
+    // Limpa os campos de endereço vindos do CEP. Com cepNaoEncontrado=true zera também o
+    // CEP e o complemento, para que um CEP inválido não fique preenchido nem seja salvo.
+    limparEndereco(cepNaoEncontrado) {
+      if (cepNaoEncontrado) {
+        this.registros.item.pessoa_cep = '';
+        this.registros.item.pessoa_complemento = '';
+      }
+      this.registros.item.pessoa_endereco = '';
+      this.registros.item.pessoa_bairro = '';
+      this.registros.item.pessoa_cidade = '';
+      this.registros.item.pessoa_uf = '';
+      this.camposBloqueados = false;
+    },
     async getCep() {
       await fetch(`https://viacep.com.br/ws/${this.registros.item.pessoa_cep}/json/`)
           .then(response => response.json())
           .then(data => {
             if (data.erro) {
+              this.limparEndereco(true);
               showToast('CEP não encontrado. Verifique se digitou corretamente.', 'warning');
               return;
             }
