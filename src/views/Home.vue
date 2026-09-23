@@ -19,7 +19,13 @@
                      required/>
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary">Entrar</button>
+              <button type="submit" class="btn btn-primary" :disabled="!validacaoConcluida">Entrar</button>
+              <small v-if="!validacaoConcluida" class="form-text text-muted d-block mt-2">
+                Para entrar com nome e CPF, valide primeiro pelo Google, pelo código no celular ou pelo link no e-mail.
+              </small>
+              <small v-else class="form-text text-success d-block mt-2">
+                Validação concluída ({{ metodoValidacao }}). Agora você pode entrar com nome e CPF.
+              </small>
             </div>
           </form>
           <br>
@@ -84,7 +90,10 @@ export default {
       },
       loading: false,
       verificationCode: "",
-      confirmationResult: null
+      confirmationResult: null,
+      // Login por nome+CPF só é liberado depois de uma validação (Google, SMS ou link de e-mail).
+      validacaoConcluida: false,
+      metodoValidacao: ''
     }
   },
   created() {
@@ -141,46 +150,11 @@ export default {
       const user = await this.parseJwt(response.credential);
       if (user.email && user.email_verified) {
         this.registros.email = user.email;
-        let dados = JSON.stringify({
-          email: this.registros.email,
-          nome: this.registros.nome,
-          cpf: this.registros.cpf
-        });
-        sessionStorage.setItem('user', dados);
         sessionStorage.setItem('email', this.registros.email);
-        return this.verificarEmailExistente();
+        return this.marcarValidacao('Google');
       } else {
         return window.alert('O Email não é válido!');
       }
-    },
-
-    // Validação do Gmail e caso validado faz login no sistema com o email.
-    async verificarEmailExistente() {
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({email: this.registros.email})
-      }
-
-      await fetch(this.ECC_API_URL + 'buscar', requestOptions)
-          .then(async response => {
-            if (!response.ok) {
-              throw new Error(await erroService.mensagemDaResposta(response));
-            }
-            return this.login();
-          })
-          .catch(error => {
-            console.log('Erro na chamada à API:', error);
-            erroService.registrarErro({
-              erro: 'Erro ao verificar email existente: ' + error,
-              nome: this.registros.nome,
-              cpf: this.registros.cpf,
-              email: this.registros.email
-            });
-            return window.alert('Erro: ', error);
-          })
     },
     initGoogleSignIn() {
       window?.google.accounts.id.initialize({
@@ -197,25 +171,48 @@ export default {
 
     },
 
+    // Registra que a pessoa provou ser dona de um e-mail ou celular. A partir daqui o
+    // login por nome+CPF é liberado, mas a busca continua exigindo que esse mesmo
+    // e-mail/celular validado bata com o cadastro (ver login()).
+    marcarValidacao(metodo) {
+      this.validacaoConcluida = true;
+      this.metodoValidacao = metodo;
+      window.alert('Validação concluída. Agora preencha nome e CPF e clique em Entrar.');
+    },
+
     // Login padrão no sistema por CPF e Nome da Pessoa completos. Caso as outras opções de login sejam usadas, é validado pela coluna associada ao método.
+    // Só é permitido depois de uma validação (Google, código SMS ou link de e-mail).
     async login() {
+      if (!this.validacaoConcluida) {
+        return window.alert('Para entrar, valide primeiro pelo Google, pelo código enviado ao celular ou pelo link enviado ao e-mail.');
+      }
+
+      if (!this.registros.nome || !this.registros.cpf) {
+        return window.alert('Preencha nome e CPF para entrar.');
+      }
+
       this.loading = true;
+
+      const celularValidado = this.registros.celular
+          ? this.registros.celular.replace(/[^a-z0-9]/gi, '')
+          : '';
 
       let dados = JSON.stringify({
         email: this.registros.email,
+        celular: celularValidado,
         nome: this.registros.nome,
         cpf: this.registros.cpf
       });
       sessionStorage.setItem('user', dados);
 
-      let criterio;
-      if (this.registros.email) {
-        criterio = {email: this.registros.email};
-      } else if (this.registros.celular) {
-        criterio = {celular: this.registros.celular.replace(/[^a-z0-9]/gi, '')};
-      } else {
-        criterio = {nome: this.registros.nome, cpf: this.registros.cpf};
-      }
+      // A busca exige nome+CPF E o contato validado (e-mail ou celular). Assim, saber o
+      // nome e o CPF de outra pessoa não é suficiente para abrir o cadastro dela.
+      const criterio = {
+        nome: this.registros.nome,
+        cpf: this.registros.cpf,
+        email: this.registros.email || '',
+        celular: celularValidado
+      };
 
       const requestOptions = {
         method: 'POST',
@@ -282,7 +279,7 @@ export default {
         if (result) {
           sessionStorage.setItem('celular', this.registros.celular);
           this.loading = false;
-          return await this.login();
+          return this.marcarValidacao('celular');
         }
       } catch (error) {
         console.error("Erro ao confirmar código:", error.code, error.message);
@@ -331,7 +328,7 @@ export default {
             this.loading = false;
             this.registros.email = email;
             sessionStorage.setItem('email', this.registros.email);
-            await this.login();
+            this.marcarValidacao('e-mail');
           }
         } catch (error) {
           console.error('Erro ao fazer login:', error);

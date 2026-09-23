@@ -637,17 +637,15 @@ export default {
         dados.email = encodedEmail;
       }
 
-      let criterio;
-      if (this.registros.item.pessoa_email || dados?.email || encodedEmail) {
-        criterio = {email: this.registros.item.pessoa_email || (dados?.email ?? encodedEmail)};
-      } else if (celular) {
-        criterio = {celular};
-      } else {
-        criterio = {
-          nome: this.registros.pessoa_nome ?? dados?.nome,
-          cpf: this.registros.pessoa_cpf ?? dados?.cpf,
-        };
-      }
+      // Mesmo critério do login: nome+CPF combinados com o contato validado (e-mail ou
+      // celular). O backend só devolve o cadastro se os dois lados baterem.
+      // O celular vai só com dígitos, pois a coluna no banco não guarda a máscara.
+      const criterio = {
+        nome: this.registros.item.pessoa_nome || dados?.nome || '',
+        cpf: this.registros.item.pessoa_cpf || dados?.cpf || '',
+        email: this.registros.item.pessoa_email || dados?.email || encodedEmail || '',
+        celular: (dados?.celular || celular || '').replace(/\D/g, '')
+      };
 
       const requestOptions = {
         method: 'POST',
