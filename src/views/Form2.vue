@@ -436,6 +436,37 @@ export default {
     },
 
     // ====== VALIDAÇÕES AUXILIARES ======
+    // Normaliza nome para comparação: sem acento, sem espaço duplicado, em maiúsculas.
+    normalizarNome(nome) {
+      if (!nome) return '';
+      return nome
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .trim()
+          .replace(/\s+/g, ' ')
+          .toUpperCase();
+    },
+    // Zera todos os campos do cônjuge. Usado quando o estado civil não prevê cônjuge,
+    // para não deixar dado antigo preenchido nem ser salvo no banco.
+    limparDadosConjuge() {
+      const camposConjuge = [
+        'conjuge_nome', 'conjuge_apelido', 'conjuge_nascimento', 'conjuge_cpf',
+        'conjuge_sexo', 'conjuge_profissao', 'conjuge_email', 'conjuge_celular',
+        'conjuge_religiao', 'conjuge_paroquia', 'conjuge_sacramento_batismo',
+        'conjuge_sacramento_eucaristia', 'conjuge_sacramento_crisma',
+        'conjuge_casamento_civil', 'conjuge_atuante_igreja',
+        'conjuge_movimento_pertencente', 'conjuge_pastorais_ou_servicos',
+        'conjuge_seita_ideologia_religiao', 'conjuge_entidade_pertencente',
+        'conjuge_email_autorizado', 'conjuge_celular_autorizado',
+        'foto_conjuge', 'pessoa_foto_casal', 'apelido_casal', 'pessoa_data_casamento'
+      ];
+
+      camposConjuge.forEach(campo => {
+        this.registros.item[campo] = '';
+      });
+
+      this.registros.cpf_validado_conjuge = false;
+    },
     validarFormatoEmail(email) {
       if (!email) return false;
       // RFC 5322 simplificado
@@ -497,26 +528,10 @@ export default {
 
       this.salvando = true;
 
-      if (this.registros.item.pessoa_estado_civil === 'Solteiro') {
-        this.registros.item.conjuge_nome = '';
-        this.registros.item.conjuge_apelido = '';
-        this.registros.item.conjuge_nascimento = '';
-        this.registros.item.pessoa_foto_casal = '';
-        this.registros.item.conjuge_profissao = '';
-        this.registros.item.conjuge_cpf = '';
-        this.registros.item.apelido_casal = '';
-        this.registros.item.pessoa_data_casamento = '';
-        this.registros.item.conjuge_email = '';
-        this.registros.item.conjuge_celular = '';
-        this.registros.item.conjuge_sacramento_batismo = '';
-        this.registros.item.conjuge_sacramento_eucaristia = ''
-        this.registros.item.conjuge_sacramento_crisma = '';
-        this.registros.item.conjuge_casamento_civil = '';
-        this.registros.item.conjuge_atuante_igreja = '';
-        this.registros.item.conjuge_movimento_pertencente = '';
-        this.registros.item.conjuge_pastorais_ou_servicos = '';
-        this.registros.item.conjuge_seita_ideologia_religiao = '';
-        this.registros.item.conjuge_entidade_pertencente = '';
+      // Antes usava a comparação literal com 'Solteiro', que não batia com os valores reais
+      // do domínio (ex: 'SOLTEIRO (A)') e por isso nunca limpava nada.
+      if (!this.comConjuge.includes(this.registros.item.pessoa_estado_civil)) {
+        this.limparDadosConjuge();
       }
 
       this.getIP();
@@ -529,14 +544,17 @@ export default {
         this.registros.item.pessoa_nascimento = this.pessoaNascimentoFormatada
       }
 
-      this.ajustarGeneroPrincipal();
-
       this.registros.item.formulario_id = 145;
 
-      if (!this.registros.item?.apelido_casal && this.comConjuge.includes(this.registros.item.pessoa_estado_civil)) {
-        const nomePessoa = this.registros.item?.pessoa_nome?.split(' ')[0] ?? '';
-        const nomeConjuge = this.registros.item?.conjuge_nome?.split(' ')[0] ?? '';
-        this.registros.item.apelido_casal = `${nomePessoa} e ${nomeConjuge}`;
+      // O payload é montado numa cópia, com o homem sempre nas colunas pessoa_*. Antes a
+      // troca era feita direto em registros.item, o que embaralhava o que estava na tela.
+      const payload = this.montarPayloadAjustado();
+
+      if (!payload.apelido_casal && this.comConjuge.includes(payload.pessoa_estado_civil)) {
+        const nomePessoa = payload.pessoa_nome?.split(' ')[0] ?? '';
+        const nomeConjuge = payload.conjuge_nome?.split(' ')[0] ?? '';
+        payload.apelido_casal = `${nomePessoa} e ${nomeConjuge}`;
+        this.registros.item.apelido_casal = payload.apelido_casal;
       }
 
       const requestOptions = {
@@ -544,7 +562,7 @@ export default {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(this.registros.item)
+        body: JSON.stringify(payload)
       }
 
       // return
@@ -841,28 +859,78 @@ export default {
       this.sexo = dominioService.getSexo();
       this.paroquia = paroquiaService.getParoquias();
     },
-    ajustarGeneroPrincipal() {
-      if (this.registros.item.pessoa_sexo === 'FEMININO') {
-        const campos = [
-          'nome',
-          'apelido',
-          'nascimento',
-          'cpf',
-          'celular',
-          'email',
-          'profissao',
-          'sexo'
-        ];
+    // Todos os pares pessoa <-> cônjuge que precisam andar juntos numa troca de slot.
+    // A lista é explícita porque os nomes não seguem um padrão único: a foto é
+    // pessoa_foto/foto_conjuge, habilidades são habilidade_X/conjuge_habilidade_X e
+    // equipes são equipe_X/conjuge_equipe_X. Montar por prefixo deixava campos para trás,
+    // e era por isso que a foto do homem acabava no registro da mulher e vice-versa.
+    paresPessoaConjuge() {
+      const pares = [
+        ['pessoa_nome', 'conjuge_nome'],
+        ['pessoa_apelido', 'conjuge_apelido'],
+        ['pessoa_nascimento', 'conjuge_nascimento'],
+        ['pessoa_cpf', 'conjuge_cpf'],
+        ['pessoa_celular', 'conjuge_celular'],
+        ['pessoa_email', 'conjuge_email'],
+        ['pessoa_profissao', 'conjuge_profissao'],
+        ['pessoa_sexo', 'conjuge_sexo'],
+        ['pessoa_foto', 'foto_conjuge'],
+        ['pessoa_religiao', 'conjuge_religiao'],
+        ['pessoa_paroquia', 'conjuge_paroquia'],
+        ['pessoa_sacramento_batismo', 'conjuge_sacramento_batismo'],
+        ['pessoa_sacramento_eucaristia', 'conjuge_sacramento_eucaristia'],
+        ['pessoa_sacramento_crisma', 'conjuge_sacramento_crisma'],
+        ['pessoa_casamento_civil', 'conjuge_casamento_civil'],
+        ['pessoa_atuante_igreja', 'conjuge_atuante_igreja'],
+        ['pessoa_movimento_pertencente', 'conjuge_movimento_pertencente'],
+        ['pessoa_pastorais_ou_servicos', 'conjuge_pastorais_ou_servicos'],
+        ['pessoa_seita_ideologia_religiao', 'conjuge_seita_ideologia_religiao'],
+        ['pessoa_entidade_pertencente', 'conjuge_entidade_pertencente'],
+        ['pessoa_email_autorizado', 'conjuge_email_autorizado'],
+        ['pessoa_celular_autorizado', 'conjuge_celular_autorizado'],
+        ['pessoa_perfil_habilidade', 'conjuge_perfil_habilidade'],
+        ['pessoa_perfil_habilidade_id', 'conjuge_perfil_habilidade_id'],
+        ['pessoa_perfil_equipe_indicada_id', 'conjuge_perfil_equipe_indicada_id'],
+        ['pessoa_cpf_ativo', 'conjuge_cpf_ativo']
+      ];
 
-        campos.forEach(campo => {
-          const pessoaKey = `pessoa_${campo}`;
-          const conjugeKey = `conjuge_${campo}`;
+      const habilidades = [
+        'cantar', 'cozinhar', 'eletronica', 'falar_em_publico', 'ministro_eucaristia',
+        'coordenar_grupos', 'informatica', 'tocar_violao', 'servir_cafe', 'desenho',
+        'limpeza', 'liturgia'
+      ];
+      habilidades.forEach(h => pares.push([`habilidade_${h}`, `conjuge_habilidade_${h}`]));
 
-          const temp = this.registros.item[pessoaKey];
-          this.registros.item[pessoaKey] = this.registros.item[conjugeKey];
-          this.registros.item[conjugeKey] = temp;
-        });
+      const equipes = [
+        'secretaria', 'cozinha', 'compras', 'visitacao', 'acolhida', 'cafe_minimercado',
+        'liturgia_vigilia', 'ordem_limpeza', 'palestras', 'sala_canto', 'boa_vontade'
+      ];
+      equipes.forEach(e => pares.push([`equipe_${e}`, `conjuge_equipe_${e}`]));
+
+      return pares;
+    },
+    // Devolve uma cópia de registros.item pronta para envio, com o homem nas colunas
+    // pessoa_* e a mulher nas conjuge_*. Não altera o que está na tela.
+    montarPayloadAjustado() {
+      const payload = {...this.registros.item};
+
+      // Sem cônjuge não há troca. Sem essa guarda, uma pessoa solteira do sexo feminino
+      // teria os próprios dados jogados para as colunas do cônjuge.
+      if (!this.comConjuge.includes(payload.pessoa_estado_civil)) {
+        return payload;
       }
+
+      if (payload.pessoa_sexo !== 'FEMININO') {
+        return payload;
+      }
+
+      this.paresPessoaConjuge().forEach(([campoPessoa, campoConjuge]) => {
+        const temp = payload[campoPessoa];
+        payload[campoPessoa] = payload[campoConjuge];
+        payload[campoConjuge] = temp;
+      });
+
+      return payload;
     },
 
     // ARQUIVOS
@@ -1165,12 +1233,15 @@ export default {
         {
           key: 'pessoa_cpf',
           label: 'CPF',
-          //   validacaoExtra: (valor) => {
-          //     if (valor && !this.validarCpf(valor)) {
-          //       return 'O CPF informado não é válido. Verifique os números.';
-          //     }
-          //     return null;
-          //   }
+          validacaoExtra: (valor) => {
+            if (!this.validarCpf(valor)) {
+              return 'O CPF informado não é válido. Verifique os números digitados.';
+            }
+            if (!this.registros.cpf_validado) {
+              return 'Clique na lupa para buscar e validar o CPF antes de continuar.';
+            }
+            return null;
+          }
         },
         {
           key: 'pessoa_celular',
@@ -1198,6 +1269,14 @@ export default {
           key: 'conjuge_nome',
           label: 'Nome do Cônjuge',
           requiredIf: () => this.comConjuge.includes(this.registros.item.pessoa_estado_civil),
+          validacaoExtra: (valor) => {
+            const nomePessoa = this.normalizarNome(this.registros.item.pessoa_nome);
+            const nomeConjuge = this.normalizarNome(valor);
+            if (nomePessoa && nomeConjuge && nomePessoa === nomeConjuge) {
+              return 'O nome do cônjuge não pode ser igual ao seu. Corrija antes de continuar.';
+            }
+            return null;
+          }
         },
         {
           key: 'conjuge_nascimento',
@@ -1214,18 +1293,21 @@ export default {
           key: 'conjuge_cpf',
           label: 'CPF do Cônjuge',
           requiredIf: () => this.comConjuge.includes(this.registros.item.pessoa_estado_civil),
-          //   validacaoExtra: (valor) => {
-          //     if (valor && !this.validarCpf(valor)) {
-          //       return 'O CPF do cônjuge não é válido.';
-          //     }
-          //     // Validação cruzada: CPF da pessoa e do cônjuge não podem ser iguais
-          //     const cpfPessoa = (this.registros.item.pessoa_cpf || '').replace(/\D/g, '');
-          //     const cpfConjuge = (valor || '').replace(/\D/g, '');
-          //     if (cpfPessoa && cpfConjuge && cpfPessoa === cpfConjuge) {
-          //       return 'O CPF do cônjuge não pode ser igual ao seu CPF.';
-          //     }
-          //     return null;
-          //   }
+          validacaoExtra: (valor) => {
+            if (!this.validarCpf(valor)) {
+              return 'O CPF do cônjuge não é válido. Verifique os números digitados.';
+            }
+            if (!this.registros.cpf_validado_conjuge) {
+              return 'Clique na lupa para buscar e validar o CPF do cônjuge antes de continuar.';
+            }
+            // Validação cruzada: CPF da pessoa e do cônjuge não podem ser iguais
+            const cpfPessoa = (this.registros.item.pessoa_cpf || '').replace(/\D/g, '');
+            const cpfConjuge = (valor || '').replace(/\D/g, '');
+            if (cpfPessoa && cpfConjuge && cpfPessoa === cpfConjuge) {
+              return 'O CPF do cônjuge não pode ser igual ao seu CPF.';
+            }
+            return null;
+          }
         },
         {
           key: 'conjuge_celular',
@@ -1253,6 +1335,14 @@ export default {
           key: 'conjuge_sexo',
           label: 'Sexo do Cônjuge',
           requiredIf: () => this.comConjuge.includes(this.registros.item.pessoa_estado_civil),
+          validacaoExtra: (valor) => {
+            const sexoPessoa = (this.registros.item.pessoa_sexo || '').trim().toUpperCase();
+            const sexoConjuge = (valor || '').trim().toUpperCase();
+            if (sexoPessoa && sexoConjuge && sexoPessoa === sexoConjuge) {
+              return 'O sexo do cônjuge não pode ser igual ao seu. Corrija antes de continuar.';
+            }
+            return null;
+          }
         },
       ];
 
