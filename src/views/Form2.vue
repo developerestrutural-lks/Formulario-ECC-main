@@ -436,6 +436,34 @@ export default {
     },
 
     // ====== VALIDAÇÕES AUXILIARES ======
+    // Converte a data de nascimento da tela para DDMMAAAA, formato exigido pela Consulta
+    // CPF v3 do SERPRO. Aceita AAAA-MM-DD (input type="date"), DD/MM/AAAA, DD/MM/AA e
+    // DDMMAAAA. Devolve null para data inválida ou futura, e aí não se chama a API.
+    nascimentoSerpro(valor) {
+      const texto = String(valor || '').trim();
+      let m = texto.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+      let dia, mes, ano;
+
+      if (m) {
+        [, ano, mes, dia] = m;
+      } else if ((m = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2}|\d{4})$/))) {
+        [, dia, mes, ano] = m;
+        if (ano.length === 2) {
+          ano = (Number(ano) > new Date().getFullYear() % 100 ? '19' : '20') + ano;
+        }
+      } else if ((m = texto.match(/^(\d{2})(\d{2})(\d{4})$/))) {
+        [, dia, mes, ano] = m;
+      } else {
+        return null;
+      }
+
+      const d = new Date(Number(ano), Number(mes) - 1, Number(dia));
+      if (d.getDate() !== Number(dia) || d.getMonth() !== Number(mes) - 1 || d > new Date()) {
+        return null;
+      }
+
+      return `${String(dia).padStart(2, '0')}${String(mes).padStart(2, '0')}${ano}`;
+    },
     // Normaliza nome para comparação: sem acento, sem espaço duplicado, em maiúsculas.
     normalizarNome(nome) {
       if (!nome) return '';
@@ -1476,6 +1504,19 @@ export default {
         return;
       }
 
+      // A Consulta CPF v3 do SERPRO exige a data de nascimento junto do CPF: ela deixou de
+      // descobrir os dados e passou a confirmar o que o usuário informou. Sem data válida
+      // não há consulta possível, então nem chamamos a API (evita cobrança e erro 400).
+      const nascimentoTela = conjuge
+          ? this.registros.item.conjuge_nascimento
+          : this.registros.item.pessoa_nascimento;
+      const nascimento = this.nascimentoSerpro(nascimentoTela);
+
+      if (!nascimento) {
+        showToast('Preencha também a data de nascimento: a Receita só consulta o CPF junto com a data de nascimento.', 'warning', 8000);
+        return;
+      }
+
       if (!conjuge) {
         this.buscandoCpfPessoa = true;
       } else {
@@ -1486,7 +1527,7 @@ export default {
         await this.getToken();
 
         const res = await fetch(
-            `https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v2/cpf/${cpf.replace(/\D/g, '')}`,
+            `https://gateway.apiserpro.serpro.gov.br/consulta-cpf-df/v3/cpf/${cpf.replace(/\D/g, '')}/${nascimento}`,
             {
               method: "GET",
               headers: {
@@ -1498,6 +1539,14 @@ export default {
 
         if (!res.ok) {
           this.registros.cpf_nao_encontrado = true;
+          // O 404 pode ser CPF inexistente OU data divergente da Receita, por isso
+          // mostramos a descrição que vem do SERPRO em vez de uma mensagem genérica.
+          const erro = await res.json().catch(() => ({}));
+          showToast(
+              erro.erroDescricao || `Não foi possível consultar o CPF (retorno ${res.status}).`,
+              'warning',
+              8000
+          );
           return;
         }
 

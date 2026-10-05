@@ -3,14 +3,15 @@
     <CpfInput id="cpf" v-model="registros.item.pessoa_cpf" :disabled="registros.cpf_validado"
               :loading="buscandoCpfPessoa" :erro="erros.pessoa_cpf" :validado="registros.cpf_validado"
               success-text="CPF validado com sucesso"
-              help-text='Digite seu CPF e clique em "Buscar CPF" para preencher seus dados automaticamente.'
+              help-text='Preencha o CPF e a data de nascimento abaixo, depois clique em "Buscar CPF". A Receita confere os dois juntos.'
               buscar-aria-label="Buscar dados pelo CPF informado" @buscar="$emit('buscar-cpf-pessoa')"/>
 
     <transition name="fade">
       <div v-if="registros.cpf_nao_encontrado" class="alert alert-warning mt-2 d-flex align-items-center"
            role="alert">
         <span class="me-2" aria-hidden="true">⚠️</span>
-        <span>CPF não encontrado. Verifique se digitou corretamente ou preencha os dados manualmente abaixo.</span>
+        <span>Não foi possível confirmar o CPF na Receita. Confira o número e a data de nascimento,
+          que precisam bater exatamente com o cadastro da Receita, e tente novamente.</span>
       </div>
     </transition>
 
@@ -145,7 +146,7 @@
       <CpfInput id="conjugeCpf" v-model="registros.item.conjuge_cpf" :disabled="registros.cpf_validado_conjuge"
                 :loading="buscandoCpfConjuge" :erro="erros.conjuge_cpf" :validado="registros.cpf_validado_conjuge"
                 success-text="CPF do cônjuge validado"
-                help-text='Digite o CPF do(a) cônjuge e clique em "Buscar CPF" para preenchimento automático.'
+                help-text='Preencha o CPF e a data de nascimento do(a) cônjuge abaixo, depois clique em "Buscar CPF". A Receita confere os dois juntos.'
                 buscar-aria-label="Buscar dados do cônjuge pelo CPF" @buscar="$emit('buscar-cpf-conjuge')"/>
 
       <div class="mb-3">
